@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rifa Brilla &amp; Canta 2026</title>
+<style>
+:root{--pri:#1a3a6b;--pri2:#2a5298;--acc:#c0392b;--gold:#d4a017;--bg:#f0f4fa;--card:#fff;--text:#1a1a2e;--text2:#5a6a7a;--border:#dde3ee;--ok:#1e7e34;--ok-bg:#d4edda;--warn:#856404;--warn-bg:#fff3cd;--err:#721c24;--err-bg:#f8d7da;--gray:#e9ecef;--pur:#6c3483;--r:10px;--sh:0 2px 14px rgba(0,0,0,.09)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+header{background:var(--pri);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.hdr{max-width:960px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:10px 16px;gap:10px;flex-wrap:wrap}
+.hdr h1{font-size:16px;font-weight:700;line-height:1.2}
+.hdr p{font-size:10px;opacity:.7}
+.hdr-stats{display:flex;gap:14px}
+.hs .v{font-size:17px;font-weight:700;color:var(--gold)}
+.hs .l{font-size:10px;opacity:.65;text-transform:uppercase;letter-spacing:.4px}
+.sw{display:flex;align-items:center;gap:5px}
+.sd{width:9px;height:9px;border-radius:50%;background:#aaa;flex-shrink:0;transition:background .3s}
+.sd.ok{background:#4caf50}.sd.err{background:#f44336}.sd.spin{background:#ffb300;animation:pu .9s infinite}.sd.pause{background:#9c27b0}
+@keyframes pu{0%,100%{opacity:1}50%{opacity:.25}}
+.slb{font-size:11px;opacity:.8;white-space:nowrap}
+.tabs{background:var(--pri2);display:flex;max-width:960px;margin:0 auto;overflow-x:auto}
+.tab{flex:1;min-width:80px;padding:9px 4px;border:none;background:transparent;color:rgba(255,255,255,.7);font-size:12px;cursor:pointer;transition:all .2s;font-weight:500;white-space:nowrap}
+.tab.on{background:var(--bg);color:var(--pri);font-weight:700;border-radius:var(--r) var(--r) 0 0}
+.tab:hover:not(.on){background:rgba(255,255,255,.15);color:#fff}
+main{max-width:960px;margin:0 auto;padding:18px 14px 60px}
+.sec{display:none}.sec.on{display:block}
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:18px;margin-bottom:16px}
+.ct{font-size:14px;font-weight:700;color:var(--pri);margin-bottom:13px;text-transform:uppercase;letter-spacing:.5px}
+/* BUSCAR */
+.srch{display:flex;gap:9px;align-items:center;margin-bottom:6px}
+.ni{width:120px;padding:10px 12px;font-size:24px;font-weight:700;text-align:center;border:2.5px solid var(--border);border-radius:var(--r);color:var(--pri);letter-spacing:4px;outline:none}
+.ni:focus{border-color:var(--pri2)}
+.bs2{padding:11px 20px;background:var(--pri);color:#fff;border:none;border-radius:var(--r);font-size:14px;font-weight:600;cursor:pointer}
+.bs2:hover{background:var(--pri2)}
+.bc{padding:11px 13px;background:var(--gray);color:var(--text2);border:none;border-radius:var(--r);font-size:13px;cursor:pointer}
+/* BOLETA */
+.bres{border-radius:var(--r);border:2px solid var(--border);overflow:hidden}
+.bhdr{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;flex-wrap:wrap;gap:8px}
+.bnums{display:flex;align-items:center;gap:9px}
+.nb{background:var(--acc);color:#fff;border-radius:6px;padding:5px 13px;font-size:20px;font-weight:700;letter-spacing:2px}
+.nb.hit{background:var(--pri);box-shadow:0 0 0 3px var(--gold)}
+.nsep{font-size:16px;color:var(--text2)}
+.ot{display:inline-flex;align-items:center;gap:4px;background:var(--pri);color:#fff;font-size:11px;font-weight:600;padding:4px 11px;border-radius:20px}
+.ot.pedro{background:var(--pur)}
+.sbx{display:inline-flex;align-items:center;font-size:11px;font-weight:700;padding:4px 11px;border-radius:20px}
+.s-l{background:var(--ok-bg);color:var(--ok)}.s-v{background:var(--err-bg);color:var(--err)}.s-a{background:var(--warn-bg);color:var(--warn)}
+.bb{padding:14px 16px;border-top:1.5px solid var(--border)}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:11px}
+.fr.one{grid-template-columns:1fr}.fr.tri{grid-template-columns:1fr 1fr 1fr}
+.fg label{display:block;font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
+.fg input,.fg select,.fg textarea{width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:7px;font-size:14px;color:var(--text);background:var(--bg);outline:none;transition:border-color .2s;font-family:inherit}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--pri2);background:#fff}
+.fg input[readonly]{background:var(--gray);color:var(--text2)}
+.fg textarea{resize:vertical;min-height:60px}
+.ps{background:#f8f4ff;border-radius:8px;padding:13px;margin-bottom:11px}
+.pg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-top:10px}
+.pg4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:9px}
+.pc{background:#fff;border-radius:7px;padding:10px;text-align:center;border:1px solid var(--border)}
+.pc .pl{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;font-weight:600}
+.pc .pv{font-size:16px;font-weight:700;color:var(--pri);margin-top:3px}
+.pc .pv.red{color:var(--acc)}.pc .pv.grn{color:var(--ok)}.pc .pv.gold{color:#b8860b}.pc .pv.pur{color:var(--pur)}
+.vb{background:var(--ok-bg);border-radius:8px;padding:11px;margin-bottom:11px;font-size:13px;color:#27500A}
+.cb{background:#fff8e1;border:1.5px solid #ffe082;border-radius:8px;padding:11px;margin-bottom:11px;font-size:12px;color:#5d4037}
+.cb .cbt{font-weight:700;margin-bottom:6px;color:#bf360c;text-transform:uppercase;letter-spacing:.4px}
+.rr{display:flex;gap:12px;flex-wrap:wrap}
+.rr label{cursor:pointer;display:flex;align-items:center;gap:6px;font-size:14px;padding:4px 0}
+.brow{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}
+.btn{padding:11px 22px;border:none;border-radius:7px;font-size:14px;font-weight:600;cursor:pointer;touch-action:manipulation}
+.btn-p{background:var(--pri);color:#fff}.btn-p:hover{background:var(--pri2)}
+.btn-o{background:var(--ok);color:#fff;font-size:15px;padding:13px 26px}
+.btn-s{background:var(--gray);color:var(--text)}
+.btn-sm{padding:5px 11px;font-size:12px}
+/* RESUMEN */
+.sg{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:11px;margin-bottom:16px}
+.sc{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:13px;text-align:center}
+.sc .sv{font-size:24px;font-weight:700;color:var(--pri)}
+.sc .sl2{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-top:3px}
+.sc.grn .sv{color:var(--ok)}.sc.red .sv{color:var(--acc)}.sc.gld .sv{color:#b8860b}.sc.pur .sv{color:var(--pur)}
+.twin{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+/* VENDEDORES */
+.vtable{width:100%;border-collapse:collapse;font-size:13px;margin-top:10px}
+.vtable th{background:#f3e8f8;color:#4a235a;padding:8px 10px;text-align:left;font-size:11px;font-weight:700;border-bottom:2px solid #d7b8f0;text-transform:uppercase;letter-spacing:.4px}
+.vtable td{padding:8px 10px;border-bottom:1px solid var(--border)}
+.vtable tfoot td{font-weight:700;background:#fdf6ff;border-top:2px solid #d7b8f0}
+/* DASHBOARD */
+.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.dash-grid.tri{grid-template-columns:1fr 1fr 1fr}
+.chart-wrap{position:relative;padding:14px;background:var(--card);border-radius:var(--r);box-shadow:var(--sh)}
+.chart-title{font-size:12px;font-weight:700;color:var(--pri);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
+.bar-chart{display:flex;flex-direction:column;gap:8px}
+.bar-row{display:flex;align-items:center;gap:8px;font-size:12px}
+.bar-lbl{width:90px;text-align:right;color:var(--text2);flex-shrink:0;font-size:11px}
+.bar-outer{flex:1;background:var(--gray);border-radius:4px;height:22px;overflow:hidden}
+.bar-inner{height:100%;border-radius:4px;transition:width .6s ease;display:flex;align-items:center;padding-left:6px;font-size:11px;font-weight:700;color:#fff;white-space:nowrap}
+.donut-wrap{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.donut-svg{flex-shrink:0}
+.donut-legend{display:flex;flex-direction:column;gap:6px}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:12px}
+.legend-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.kpi-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kpi{background:var(--bg);border-radius:8px;padding:12px;text-align:center}
+.kpi .kv{font-size:20px;font-weight:700}
+.kpi .kl{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-top:2px}
+.progress-wrap{margin-top:8px}
+.prog-lbl{display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:4px}
+.prog-outer{background:var(--gray);border-radius:6px;height:14px;overflow:hidden}
+.prog-inner{height:100%;border-radius:6px;background:var(--pri);transition:width .6s ease}
+/* LISTADO */
+.twrap{overflow-x:auto}
+table.lt{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed}
+table.lt th{background:var(--pri);color:#fff;padding:8px 10px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+table.lt td{padding:8px 10px;border-bottom:1px solid var(--border);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+table.lt tr:hover td{background:#f0f4ff}
+.fi{display:flex;gap:9px;margin-bottom:11px;flex-wrap:wrap;align-items:center}
+.fi input,.fi select{padding:7px 11px;border:1.5px solid var(--border);border-radius:7px;font-size:12px}
+.fi input{min-width:170px}
+/* TOAST & BANNERS */
+.toast{position:fixed;bottom:20px;right:20px;z-index:9999;background:var(--pri);color:#fff;padding:12px 22px;border-radius:var(--r);box-shadow:0 4px 20px rgba(0,0,0,.25);font-size:13px;font-weight:500;transform:translateY(80px);opacity:0;transition:all .3s;max-width:300px}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.ok2{background:var(--ok)}.toast.err2{background:var(--acc)}
+.edit-banner{background:#e3f2fd;border:1.5px solid #90caf9;border-radius:8px;padding:10px 14px;font-size:12px;color:#0d47a1;margin-bottom:12px;display:none}
+.edit-banner.show{display:block}
+.eb{background:#fff3cd;border:1.5px solid #ffe082;border-radius:var(--r);padding:14px;font-size:13px;color:#5d4037;margin-bottom:14px;display:none}
+.eb.show{display:block}
+@media(max-width:600px){
+  .fr{grid-template-columns:1fr}.fr.tri{grid-template-columns:1fr 1fr}
+  .pg{grid-template-columns:1fr 1fr}.pg4{grid-template-columns:1fr 1fr}
+  .twin{grid-template-columns:1fr}.dash-grid{grid-template-columns:1fr}.dash-grid.tri{grid-template-columns:1fr}
+  .ni{width:100px;font-size:20px}
+  .fg input,.fg select,.fg textarea{font-size:16px;padding:10px 12px}
+  .btn-o{width:100%;text-align:center;padding:15px}
+  .brow{flex-direction:column}.btn-s{width:100%}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="hdr">
+    <div><h1>🎤 Rifa Brilla &amp; Canta</h1><p>Gran Rifa $5.000.000 · 4 julio 2026</p></div>
+    <div class="hdr-stats">
+      <div class="hs"><div class="v" id="hs-v">—</div><div class="l">Vendidas</div></div>
+      <div class="hs"><div class="v" id="hs-r">—</div><div class="l">Recaudado</div></div>
+      <div class="hs"><div class="v" id="hs-l">—</div><div class="l">Libres</div></div>
+    </div>
+    <div class="sw"><div class="sd spin" id="sd"></div><span class="slb" id="slb">Conectando…</span></div>
+  </div>
+  <div class="tabs">
+    <button class="tab on" onclick="showTab('buscar',this)">🔍 Buscar</button>
+    <button class="tab" onclick="showTab('resumen',this)">📊 Resumen</button>
+    <button class="tab" onclick="showTab('dashboard',this)">📈 Dashboard</button>
+    <button class="tab" onclick="showTab('vendedores',this)">🤝 Vendedores</button>
+    <button class="tab" onclick="showTab('listado',this)">📋 Listado</button>
+  </div>
+</header>
+<main>
+
+<!-- BUSCAR -->
+<div id="sec-buscar" class="sec on">
+  <div id="eb" class="eb">⚠️ <strong>Sin conexión al servidor.</strong><br>
+    <button class="btn btn-p btn-sm" style="margin-top:8px" onclick="cargar(false)">🔄 Reintentar</button></div>
+  <div id="edit-banner" class="edit-banner">✏️ <strong>MODO EDICIÓN ACTIVO</strong> — Sincronización pausada. Presiona <strong>GUARDAR EN LA NUBE</strong> cuando termines.</div>
+  <div class="card">
+    <div class="ct">Buscar número de boleta</div>
+    <div class="srch">
+      <input type="number" id="ni" class="ni" placeholder="357" min="0" max="999"
+        oninput="this.value=this.value.slice(0,3)" onkeyup="if(event.key==='Enter')buscar()"/>
+      <button class="btn bs2" onclick="buscar()">Buscar</button>
+      <button class="btn bc" onclick="limpiar()">✕</button>
+    </div>
+    <p style="font-size:11px;color:var(--text2)">Escribe los 3 dígitos y presiona Enter.</p>
+  </div>
+  <div id="ra"></div>
+</div>
+
+<!-- RESUMEN -->
+<div id="sec-resumen" class="sec">
+  <div class="sg">
+    <div class="sc"><div class="sv">500</div><div class="sl2">Total boletas</div></div>
+    <div class="sc grn"><div class="sv" id="st-v">—</div><div class="sl2">Vendidas</div></div>
+    <div class="sc" style="background:var(--warn-bg)"><div class="sv" style="color:var(--warn)" id="st-a">—</div><div class="sl2">Apartadas</div></div>
+    <div class="sc red"><div class="sv" id="st-l">—</div><div class="sl2">Disponibles</div></div>
+  </div>
+  <div class="twin">
+    <div class="card">
+      <div class="ct">🎯 Víctor Manuel</div>
+      <div style="font-size:13px;line-height:2.2">
+        <div>Vendidas/Apart.: <strong id="rv-v">—</strong></div>
+        <div>Disponibles: <strong id="rv-l">—</strong></div>
+        <div>Recaudado: <strong id="rv-r">—</strong></div>
+        <div>Por cobrar: <strong id="rv-p" style="color:var(--acc)">—</strong></div>
+        <div>Comisiones: <strong id="rv-c" style="color:var(--pur)">—</strong></div>
+        <div>💰 Ganancia neta: <strong id="rv-g" style="color:var(--ok)">—</strong></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ct" style="color:var(--pur)">🎯 Pedro Nel</div>
+      <div style="font-size:13px;line-height:2.2">
+        <div>Vendidas/Apart.: <strong id="rp-v">—</strong></div>
+        <div>Disponibles: <strong id="rp-l">—</strong></div>
+        <div>Recaudado: <strong id="rp-r">—</strong></div>
+        <div>Por cobrar: <strong id="rp-p" style="color:var(--acc)">—</strong></div>
+        <div>Comisiones: <strong id="rp-c" style="color:var(--pur)">—</strong></div>
+        <div>💰 Ganancia neta: <strong id="rp-g" style="color:var(--ok)">—</strong></div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct">💰 Balance general consolidado</div>
+    <div class="pg4">
+      <div class="pc"><div class="pl">Recaudado</div><div class="pv grn" id="res-r">—</div></div>
+      <div class="pc"><div class="pl">Por cobrar</div><div class="pv red" id="res-p">—</div></div>
+      <div class="pc"><div class="pl">Comisiones totales</div><div class="pv pur" id="res-c">—</div></div>
+      <div class="pc"><div class="pl">Ganancia neta total</div><div class="pv gold" id="res-g">—</div></div>
+    </div>
+  </div>
+  <div style="text-align:right;margin-top:-8px">
+    <button class="btn btn-s btn-sm" onclick="cargar(false)">🔄 Actualizar</button>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="sec-dashboard" class="sec">
+  <div class="dash-grid">
+    <!-- Donut estado -->
+    <div class="chart-wrap">
+      <div class="chart-title">Estado de boletas</div>
+      <div class="donut-wrap">
+        <svg class="donut-svg" id="donut-svg" width="120" height="120" viewBox="0 0 120 120"></svg>
+        <div class="donut-legend" id="donut-legend"></div>
+      </div>
+    </div>
+    <!-- Progreso general -->
+    <div class="chart-wrap">
+      <div class="chart-title">Progreso de ventas</div>
+      <div class="kpi-row" id="kpi-row"></div>
+      <div class="progress-wrap" style="margin-top:14px">
+        <div class="prog-lbl"><span>Boletas colocadas</span><span id="prog-pct">0%</span></div>
+        <div class="prog-outer"><div class="prog-inner" id="prog-bar" style="width:0%"></div></div>
+      </div>
+      <div class="progress-wrap" style="margin-top:10px">
+        <div class="prog-lbl"><span>Recaudo cobrado</span><span id="prog-pct2">0%</span></div>
+        <div class="prog-outer"><div class="prog-inner" id="prog-bar2" style="width:0%;background:var(--ok)"></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="dash-grid tri">
+    <!-- Barras Víctor vs Pedro -->
+    <div class="chart-wrap">
+      <div class="chart-title">Vendidas: Víctor vs Pedro</div>
+      <div class="bar-chart" id="bar-vp"></div>
+    </div>
+    <!-- Recaudo Víctor vs Pedro -->
+    <div class="chart-wrap">
+      <div class="chart-title">Recaudo: Víctor vs Pedro</div>
+      <div class="bar-chart" id="bar-rec"></div>
+    </div>
+    <!-- Ganancia neta -->
+    <div class="chart-wrap">
+      <div class="chart-title">Ganancia neta vs Comisiones</div>
+      <div class="bar-chart" id="bar-gan"></div>
+    </div>
+  </div>
+  <div class="dash-grid">
+    <!-- Top vendedores externos -->
+    <div class="chart-wrap">
+      <div class="chart-title">Top vendedores externos</div>
+      <div id="bar-vend"></div>
+    </div>
+    <!-- Precios -->
+    <div class="chart-wrap">
+      <div class="chart-title">Distribución de precios</div>
+      <div id="bar-precios"></div>
+    </div>
+  </div>
+  <div style="text-align:right">
+    <button class="btn btn-s btn-sm" onclick="renderDashboard()">🔄 Actualizar</button>
+  </div>
+</div>
+
+<!-- VENDEDORES -->
+<div id="sec-vendedores" class="sec">
+  <div class="card">
+    <div class="ct">🤝 Comisiones por vendedor externo</div>
+    <p style="font-size:12px;color:var(--text2);margin-bottom:12px">Cada vendedor externo gana $5.000 por boleta. Aquí el detalle de lo que se les debe.</p>
+    <div id="vend-table-wrap"><p style="color:var(--text2);font-size:13px">Cargando…</p></div>
+  </div>
+  <div class="card">
+    <div class="ct">Resumen de comisiones</div>
+    <div class="pg">
+      <div class="pc"><div class="pl">Vendedores externos</div><div class="pv" id="vc-total">—</div></div>
+      <div class="pc"><div class="pl">Boletas con vendedor</div><div class="pv" id="vc-boletas">—</div></div>
+      <div class="pc"><div class="pl">Total comisiones</div><div class="pv pur" id="vc-monto">—</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- LISTADO -->
+<div id="sec-listado" class="sec">
+  <div class="card" style="padding-bottom:8px">
+    <div class="fi">
+      <input type="text" id="fn" placeholder="🔍 Buscar por nombre…" oninput="filtrar()"/>
+      <select id="fe" onchange="filtrar()">
+        <option value="">TODOS LOS ESTADOS</option>
+        <option value="LIBRE">DISPONIBLES</option>
+        <option value="VENDIDA">VENDIDAS</option>
+        <option value="APARTADA">APARTADAS</option>
+      </select>
+      <select id="fd" onchange="filtrar()">
+        <option value="">AMBOS PAQUETES</option>
+        <option value="VICTOR">VÍCTOR</option>
+        <option value="PEDRO">PEDRO</option>
+      </select>
+    </div>
+    <div class="twrap">
+      <table class="lt">
+        <thead><tr>
+          <th style="width:46px">N° 1</th>
+          <th style="width:46px">N° 2</th>
+          <th style="width:72px">PROPIETARIO</th>
+          <th style="width:80px">ESTADO</th>
+          <th>COMPRADOR</th>
+          <th style="width:65px">VENDIDA POR</th>
+          <th style="width:85px">ABONO</th>
+          <th style="width:46px"></th>
+        </tr></thead>
+        <tbody id="tb"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+</main>
+<div class="toast" id="toast"></div>
+<script>
+const API="https://script.google.com/macros/s/AKfycbwKU2YVkKhXvljjLCoCs4ZAEDCCuUTVYgoGC6nowqhR7hepxytd-j0Hd99fW3BZh5AQIA/exec";
+const MASTER={"VICTOR_1":{"dueno":"VICTOR","n1":"033","n2":"556","id":"1"},"VICTOR_2":{"dueno":"VICTOR","n1":"034","n2":"557","id":"2"},"VICTOR_3":{"dueno":"VICTOR","n1":"037","n2":"560","id":"3"},"VICTOR_4":{"dueno":"VICTOR","n1":"038","n2":"561","id":"4"},"VICTOR_5":{"dueno":"VICTOR","n1":"041","n2":"564","id":"5"},"VICTOR_6":{"dueno":"VICTOR","n1":"049","n2":"572","id":"6"},"VICTOR_7":{"dueno":"VICTOR","n1":"045","n2":"568","id":"7"},"VICTOR_8":{"dueno":"VICTOR","n1":"046","n2":"569","id":"8"},"VICTOR_9":{"dueno":"VICTOR","n1":"042","n2":"565","id":"9"},"VICTOR_10":{"dueno":"VICTOR","n1":"053","n2":"576","id":"10"},"VICTOR_11":{"dueno":"VICTOR","n1":"013","n2":"536","id":"11"},"VICTOR_12":{"dueno":"VICTOR","n1":"014","n2":"537","id":"12"},"VICTOR_13":{"dueno":"VICTOR","n1":"017","n2":"540","id":"13"},"VICTOR_14":{"dueno":"VICTOR","n1":"018","n2":"541","id":"14"},"VICTOR_15":{"dueno":"VICTOR","n1":"021","n2":"544","id":"15"},"VICTOR_16":{"dueno":"VICTOR","n1":"022","n2":"545","id":"16"},"VICTOR_17":{"dueno":"VICTOR","n1":"025","n2":"548","id":"17"},"VICTOR_18":{"dueno":"VICTOR","n1":"026","n2":"549","id":"18"},"VICTOR_19":{"dueno":"VICTOR","n1":"029","n2":"552","id":"19"},"VICTOR_20":{"dueno":"VICTOR","n1":"030","n2":"553","id":"20"},"VICTOR_21":{"dueno":"VICTOR","n1":"194","n2":"717","id":"21"},"VICTOR_22":{"dueno":"VICTOR","n1":"195","n2":"718","id":"22"},"VICTOR_23":{"dueno":"VICTOR","n1":"199","n2":"722","id":"23"},"VICTOR_24":{"dueno":"VICTOR","n1":"001","n2":"524","id":"24"},"VICTOR_25":{"dueno":"VICTOR","n1":"002","n2":"525","id":"25"},"VICTOR_26":{"dueno":"VICTOR","n1":"198","n2":"721","id":"26"},"VICTOR_27":{"dueno":"VICTOR","n1":"005","n2":"528","id":"27"},"VICTOR_28":{"dueno":"VICTOR","n1":"006","n2":"529","id":"28"},"VICTOR_29":{"dueno":"VICTOR","n1":"009","n2":"532","id":"29"},"VICTOR_30":{"dueno":"VICTOR","n1":"010","n2":"533","id":"30"},"VICTOR_31":{"dueno":"VICTOR","n1":"054","n2":"577","id":"31"},"VICTOR_32":{"dueno":"VICTOR","n1":"057","n2":"580","id":"32"},"VICTOR_33":{"dueno":"VICTOR","n1":"058","n2":"581","id":"33"},"VICTOR_34":{"dueno":"VICTOR","n1":"061","n2":"584","id":"34"},"VICTOR_35":{"dueno":"VICTOR","n1":"062","n2":"585","id":"35"},"VICTOR_36":{"dueno":"VICTOR","n1":"065","n2":"588","id":"36"},"VICTOR_37":{"dueno":"VICTOR","n1":"066","n2":"589","id":"37"},"VICTOR_38":{"dueno":"VICTOR","n1":"069","n2":"592","id":"38"},"VICTOR_39":{"dueno":"VICTOR","n1":"070","n2":"593","id":"39"},"VICTOR_40":{"dueno":"VICTOR","n1":"073","n2":"596","id":"40"},"VICTOR_41":{"dueno":"VICTOR","n1":"459","n2":"982","id":"41"},"VICTOR_42":{"dueno":"VICTOR","n1":"462","n2":"985","id":"42"},"VICTOR_43":{"dueno":"VICTOR","n1":"463","n2":"986","id":"43"},"VICTOR_44":{"dueno":"VICTOR","n1":"466","n2":"989","id":"44"},"VICTOR_45":{"dueno":"VICTOR","n1":"467","n2":"990","id":"45"},"VICTOR_46":{"dueno":"VICTOR","n1":"470","n2":"993","id":"46"},"VICTOR_47":{"dueno":"VICTOR","n1":"471","n2":"994","id":"47"},"VICTOR_48":{"dueno":"VICTOR","n1":"474","n2":"997","id":"48"},"VICTOR_49":{"dueno":"VICTOR","n1":"475","n2":"998","id":"49"},"VICTOR_50":{"dueno":"VICTOR","n1":"478","n2":"501","id":"50"},"VICTOR_51":{"dueno":"VICTOR","n1":"435","n2":"958","id":"51"},"VICTOR_52":{"dueno":"VICTOR","n1":"438","n2":"961","id":"52"},"VICTOR_53":{"dueno":"VICTOR","n1":"439","n2":"962","id":"53"},"VICTOR_54":{"dueno":"VICTOR","n1":"442","n2":"965","id":"54"},"VICTOR_55":{"dueno":"VICTOR","n1":"443","n2":"966","id":"55"},"VICTOR_56":{"dueno":"VICTOR","n1":"446","n2":"969","id":"56"},"VICTOR_57":{"dueno":"VICTOR","n1":"451","n2":"974","id":"57"},"VICTOR_58":{"dueno":"VICTOR","n1":"454","n2":"977","id":"58"},"VICTOR_59":{"dueno":"VICTOR","n1":"455","n2":"978","id":"59"},"VICTOR_60":{"dueno":"VICTOR","n1":"458","n2":"981","id":"60"},"VICTOR_61":{"dueno":"VICTOR","n1":"415","n2":"938","id":"61"},"VICTOR_62":{"dueno":"VICTOR","n1":"418","n2":"941","id":"62"},"VICTOR_63":{"dueno":"VICTOR","n1":"419","n2":"942","id":"63"},"VICTOR_64":{"dueno":"VICTOR","n1":"422","n2":"945","id":"64"},"VICTOR_65":{"dueno":"VICTOR","n1":"423","n2":"946","id":"65"},"VICTOR_66":{"dueno":"VICTOR","n1":"426","n2":"949","id":"66"},"VICTOR_67":{"dueno":"VICTOR","n1":"427","n2":"950","id":"67"},"VICTOR_68":{"dueno":"VICTOR","n1":"430","n2":"953","id":"68"},"VICTOR_69":{"dueno":"VICTOR","n1":"431","n2":"954","id":"69"},"VICTOR_70":{"dueno":"VICTOR","n1":"434","n2":"957","id":"70"},"VICTOR_71":{"dueno":"VICTOR","n1":"094","n2":"617","id":"71"},"VICTOR_72":{"dueno":"VICTOR","n1":"097","n2":"620","id":"72"},"VICTOR_73":{"dueno":"VICTOR","n1":"098","n2":"621","id":"73"},"VICTOR_74":{"dueno":"VICTOR","n1":"402","n2":"925","id":"74"},"VICTOR_75":{"dueno":"VICTOR","n1":"403","n2":"926","id":"75"},"VICTOR_76":{"dueno":"VICTOR","n1":"406","n2":"929","id":"76"},"VICTOR_77":{"dueno":"VICTOR","n1":"407","n2":"930","id":"77"},"VICTOR_78":{"dueno":"VICTOR","n1":"410","n2":"933","id":"78"},"VICTOR_79":{"dueno":"VICTOR","n1":"411","n2":"934","id":"79"},"VICTOR_80":{"dueno":"VICTOR","n1":"414","n2":"937","id":"80"},"VICTOR_81":{"dueno":"VICTOR","n1":"074","n2":"597","id":"81"},"VICTOR_82":{"dueno":"VICTOR","n1":"077","n2":"600","id":"82"},"VICTOR_83":{"dueno":"VICTOR","n1":"078","n2":"601","id":"83"},"VICTOR_84":{"dueno":"VICTOR","n1":"081","n2":"604","id":"84"},"VICTOR_85":{"dueno":"VICTOR","n1":"082","n2":"605","id":"85"},"VICTOR_86":{"dueno":"VICTOR","n1":"085","n2":"608","id":"86"},"VICTOR_87":{"dueno":"VICTOR","n1":"086","n2":"609","id":"87"},"VICTOR_88":{"dueno":"VICTOR","n1":"089","n2":"612","id":"88"},"VICTOR_89":{"dueno":"VICTOR","n1":"090","n2":"613","id":"89"},"VICTOR_90":{"dueno":"VICTOR","n1":"093","n2":"616","id":"90"},"VICTOR_91":{"dueno":"VICTOR","n1":"259","n2":"782","id":"91"},"VICTOR_92":{"dueno":"VICTOR","n1":"262","n2":"785","id":"92"},"VICTOR_93":{"dueno":"VICTOR","n1":"263","n2":"786","id":"93"},"VICTOR_94":{"dueno":"VICTOR","n1":"266","n2":"789","id":"94"},"VICTOR_95":{"dueno":"VICTOR","n1":"267","n2":"790","id":"95"},"VICTOR_96":{"dueno":"VICTOR","n1":"270","n2":"793","id":"96"},"VICTOR_97":{"dueno":"VICTOR","n1":"271","n2":"794","id":"97"},"VICTOR_98":{"dueno":"VICTOR","n1":"274","n2":"797","id":"98"},"VICTOR_99":{"dueno":"VICTOR","n1":"275","n2":"798","id":"99"},"VICTOR_100":{"dueno":"VICTOR","n1":"278","n2":"801","id":"100"},"VICTOR_101":{"dueno":"VICTOR","n1":"239","n2":"762","id":"101"},"VICTOR_102":{"dueno":"VICTOR","n1":"242","n2":"765","id":"102"},"VICTOR_103":{"dueno":"VICTOR","n1":"243","n2":"766","id":"103"},"VICTOR_104":{"dueno":"VICTOR","n1":"246","n2":"769","id":"104"},"VICTOR_105":{"dueno":"VICTOR","n1":"247","n2":"770","id":"105"},"VICTOR_106":{"dueno":"VICTOR","n1":"250","n2":"773","id":"106"},"VICTOR_107":{"dueno":"VICTOR","n1":"251","n2":"774","id":"107"},"VICTOR_108":{"dueno":"VICTOR","n1":"254","n2":"777","id":"108"},"VICTOR_109":{"dueno":"VICTOR","n1":"255","n2":"778","id":"109"},"VICTOR_110":{"dueno":"VICTOR","n1":"258","n2":"781","id":"110"},"VICTOR_111":{"dueno":"VICTOR","n1":"219","n2":"742","id":"111"},"VICTOR_112":{"dueno":"VICTOR","n1":"222","n2":"745","id":"112"},"VICTOR_113":{"dueno":"VICTOR","n1":"223","n2":"746","id":"113"},"VICTOR_114":{"dueno":"VICTOR","n1":"226","n2":"749","id":"114"},"VICTOR_115":{"dueno":"VICTOR","n1":"227","n2":"750","id":"115"},"VICTOR_116":{"dueno":"VICTOR","n1":"230","n2":"753","id":"116"},"VICTOR_117":{"dueno":"VICTOR","n1":"231","n2":"754","id":"117"},"VICTOR_118":{"dueno":"VICTOR","n1":"234","n2":"757","id":"118"},"VICTOR_119":{"dueno":"VICTOR","n1":"235","n2":"758","id":"119"},"VICTOR_120":{"dueno":"VICTOR","n1":"238","n2":"761","id":"120"},"VICTOR_121":{"dueno":"VICTOR","n1":"499","n2":"522","id":"121"},"VICTOR_122":{"dueno":"VICTOR","n1":"202","n2":"725","id":"122"},"VICTOR_123":{"dueno":"VICTOR","n1":"203","n2":"726","id":"123"},"VICTOR_124":{"dueno":"VICTOR","n1":"206","n2":"729","id":"124"},"VICTOR_125":{"dueno":"VICTOR","n1":"207","n2":"730","id":"125"},"VICTOR_126":{"dueno":"VICTOR","n1":"210","n2":"733","id":"126"},"VICTOR_127":{"dueno":"VICTOR","n1":"211","n2":"734","id":"127"},"VICTOR_128":{"dueno":"VICTOR","n1":"214","n2":"737","id":"128"},"VICTOR_129":{"dueno":"VICTOR","n1":"215","n2":"738","id":"129"},"VICTOR_130":{"dueno":"VICTOR","n1":"218","n2":"741","id":"130"},"VICTOR_131":{"dueno":"VICTOR","n1":"479","n2":"502","id":"131"},"VICTOR_132":{"dueno":"VICTOR","n1":"483","n2":"506","id":"132"},"VICTOR_133":{"dueno":"VICTOR","n1":"482","n2":"505","id":"133"},"VICTOR_134":{"dueno":"VICTOR","n1":"486","n2":"509","id":"134"},"VICTOR_135":{"dueno":"VICTOR","n1":"487","n2":"510","id":"135"},"VICTOR_136":{"dueno":"VICTOR","n1":"490","n2":"513","id":"136"},"VICTOR_137":{"dueno":"VICTOR","n1":"491","n2":"514","id":"137"},"VICTOR_138":{"dueno":"VICTOR","n1":"494","n2":"517","id":"138"},"VICTOR_139":{"dueno":"VICTOR","n1":"495","n2":"518","id":"139"},"VICTOR_140":{"dueno":"VICTOR","n1":"498","n2":"521","id":"140"},"VICTOR_141":{"dueno":"VICTOR","n1":"363","n2":"886","id":"141"},"VICTOR_142":{"dueno":"VICTOR","n1":"365","n2":"888","id":"142"},"VICTOR_143":{"dueno":"VICTOR","n1":"368","n2":"891","id":"143"},"VICTOR_144":{"dueno":"VICTOR","n1":"369","n2":"892","id":"144"},"VICTOR_145":{"dueno":"VICTOR","n1":"372","n2":"895","id":"145"},"VICTOR_146":{"dueno":"VICTOR","n1":"373","n2":"896","id":"146"},"VICTOR_147":{"dueno":"VICTOR","n1":"376","n2":"899","id":"147"},"VICTOR_148":{"dueno":"VICTOR","n1":"377","n2":"900","id":"148"},"VICTOR_149":{"dueno":"VICTOR","n1":"380","n2":"903","id":"149"},"VICTOR_150":{"dueno":"VICTOR","n1":"381","n2":"904","id":"150"},"VICTOR_151":{"dueno":"VICTOR","n1":"342","n2":"865","id":"151"},"VICTOR_152":{"dueno":"VICTOR","n1":"343","n2":"866","id":"152"},"VICTOR_153":{"dueno":"VICTOR","n1":"346","n2":"869","id":"153"},"VICTOR_154":{"dueno":"VICTOR","n1":"347","n2":"870","id":"154"},"VICTOR_155":{"dueno":"VICTOR","n1":"350","n2":"873","id":"155"},"VICTOR_156":{"dueno":"VICTOR","n1":"351","n2":"874","id":"156"},"VICTOR_157":{"dueno":"VICTOR","n1":"354","n2":"877","id":"157"},"VICTOR_158":{"dueno":"VICTOR","n1":"355","n2":"878","id":"158"},"VICTOR_159":{"dueno":"VICTOR","n1":"358","n2":"881","id":"159"},"VICTOR_160":{"dueno":"VICTOR","n1":"359","n2":"882","id":"160"},"VICTOR_161":{"dueno":"VICTOR","n1":"319","n2":"842","id":"161"},"VICTOR_162":{"dueno":"VICTOR","n1":"322","n2":"845","id":"162"},"VICTOR_163":{"dueno":"VICTOR","n1":"323","n2":"846","id":"163"},"VICTOR_164":{"dueno":"VICTOR","n1":"326","n2":"849","id":"164"},"VICTOR_165":{"dueno":"VICTOR","n1":"327","n2":"850","id":"165"},"VICTOR_166":{"dueno":"VICTOR","n1":"330","n2":"853","id":"166"},"VICTOR_167":{"dueno":"VICTOR","n1":"331","n2":"854","id":"167"},"VICTOR_168":{"dueno":"VICTOR","n1":"334","n2":"857","id":"168"},"VICTOR_169":{"dueno":"VICTOR","n1":"335","n2":"858","id":"169"},"VICTOR_170":{"dueno":"VICTOR","n1":"339","n2":"862","id":"170"},"VICTOR_171":{"dueno":"VICTOR","n1":"299","n2":"822","id":"171"},"VICTOR_172":{"dueno":"VICTOR","n1":"302","n2":"825","id":"172"},"VICTOR_173":{"dueno":"VICTOR","n1":"303","n2":"826","id":"173"},"VICTOR_174":{"dueno":"VICTOR","n1":"306","n2":"829","id":"174"},"VICTOR_175":{"dueno":"VICTOR","n1":"307","n2":"830","id":"175"},"VICTOR_176":{"dueno":"VICTOR","n1":"310","n2":"833","id":"176"},"VICTOR_177":{"dueno":"VICTOR","n1":"311","n2":"834","id":"177"},"VICTOR_178":{"dueno":"VICTOR","n1":"314","n2":"837","id":"178"},"VICTOR_179":{"dueno":"VICTOR","n1":"315","n2":"838","id":"179"},"VICTOR_180":{"dueno":"VICTOR","n1":"318","n2":"841","id":"180"},"VICTOR_181":{"dueno":"VICTOR","n1":"282","n2":"805","id":"181"},"VICTOR_182":{"dueno":"VICTOR","n1":"279","n2":"802","id":"182"},"VICTOR_183":{"dueno":"VICTOR","n1":"283","n2":"806","id":"183"},"VICTOR_184":{"dueno":"VICTOR","n1":"286","n2":"809","id":"184"},"VICTOR_185":{"dueno":"VICTOR","n1":"287","n2":"810","id":"185"},"VICTOR_186":{"dueno":"VICTOR","n1":"290","n2":"813","id":"186"},"VICTOR_187":{"dueno":"VICTOR","n1":"291","n2":"814","id":"187"},"VICTOR_188":{"dueno":"VICTOR","n1":"294","n2":"817","id":"188"},"VICTOR_189":{"dueno":"VICTOR","n1":"295","n2":"818","id":"189"},"VICTOR_190":{"dueno":"VICTOR","n1":"298","n2":"821","id":"190"},"VICTOR_191":{"dueno":"VICTOR","n1":"164","n2":"687","id":"191"},"VICTOR_192":{"dueno":"VICTOR","n1":"193","n2":"716","id":"192"},"VICTOR_193":{"dueno":"VICTOR","n1":"177","n2":"700","id":"193"},"VICTOR_194":{"dueno":"VICTOR","n1":"176","n2":"699","id":"194"},"VICTOR_195":{"dueno":"VICTOR","n1":"180","n2":"703","id":"195"},"VICTOR_196":{"dueno":"VICTOR","n1":"181","n2":"704","id":"196"},"VICTOR_197":{"dueno":"VICTOR","n1":"184","n2":"707","id":"197"},"VICTOR_198":{"dueno":"VICTOR","n1":"157","n2":"680","id":"198"},"VICTOR_199":{"dueno":"VICTOR","n1":"156","n2":"679","id":"199"},"VICTOR_200":{"dueno":"VICTOR","n1":"160","n2":"683","id":"200"},"VICTOR_201":{"dueno":"VICTOR","n1":"161","n2":"684","id":"201"},"VICTOR_202":{"dueno":"VICTOR","n1":"168","n2":"691","id":"202"},"VICTOR_203":{"dueno":"VICTOR","n1":"450","n2":"973","id":"203"},"VICTOR_204":{"dueno":"VICTOR","n1":"147","n2":"670","id":"204"},"VICTOR_205":{"dueno":"VICTOR","n1":"146","n2":"669","id":"205"},"VICTOR_206":{"dueno":"VICTOR","n1":"143","n2":"666","id":"206"},"VICTOR_207":{"dueno":"VICTOR","n1":"142","n2":"665","id":"207"},"VICTOR_208":{"dueno":"VICTOR","n1":"139","n2":"662","id":"208"},"VICTOR_209":{"dueno":"VICTOR","n1":"138","n2":"661","id":"209"},"VICTOR_210":{"dueno":"VICTOR","n1":"185","n2":"708","id":"210"},"VICTOR_211":{"dueno":"VICTOR","n1":"188","n2":"711","id":"211"},"VICTOR_212":{"dueno":"VICTOR","n1":"189","n2":"712","id":"212"},"VICTOR_213":{"dueno":"VICTOR","n1":"192","n2":"715","id":"213"},"VICTOR_214":{"dueno":"VICTOR","n1":"165","n2":"688","id":"214"},"VICTOR_215":{"dueno":"VICTOR","n1":"173","n2":"696","id":"215"},"VICTOR_216":{"dueno":"VICTOR","n1":"118","n2":"641","id":"216"},"VICTOR_217":{"dueno":"VICTOR","n1":"135","n2":"658","id":"217"},"VICTOR_218":{"dueno":"VICTOR","n1":"134","n2":"657","id":"218"},"VICTOR_219":{"dueno":"VICTOR","n1":"131","n2":"654","id":"219"},"VICTOR_220":{"dueno":"VICTOR","n1":"130","n2":"653","id":"220"},"VICTOR_221":{"dueno":"VICTOR","n1":"127","n2":"650","id":"221"},"VICTOR_222":{"dueno":"VICTOR","n1":"196","n2":"719","id":"222"},"VICTOR_223":{"dueno":"VICTOR","n1":"197","n2":"720","id":"223"},"VICTOR_224":{"dueno":"VICTOR","n1":"153","n2":"676","id":"224"},"VICTOR_225":{"dueno":"VICTOR","n1":"152","n2":"675","id":"225"},"VICTOR_226":{"dueno":"VICTOR","n1":"172","n2":"695","id":"226"},"VICTOR_227":{"dueno":"VICTOR","n1":"102","n2":"625","id":"227"},"VICTOR_228":{"dueno":"VICTOR","n1":"115","n2":"638","id":"228"},"VICTOR_229":{"dueno":"VICTOR","n1":"114","n2":"637","id":"229"},"VICTOR_230":{"dueno":"VICTOR","n1":"111","n2":"634","id":"230"},"VICTOR_231":{"dueno":"VICTOR","n1":"110","n2":"633","id":"231"},"VICTOR_232":{"dueno":"VICTOR","n1":"107","n2":"630","id":"232"},"VICTOR_233":{"dueno":"VICTOR","n1":"126","n2":"649","id":"233"},"VICTOR_234":{"dueno":"VICTOR","n1":"123","n2":"646","id":"234"},"VICTOR_235":{"dueno":"VICTOR","n1":"122","n2":"645","id":"235"},"VICTOR_236":{"dueno":"VICTOR","n1":"119","n2":"642","id":"236"},"VICTOR_237":{"dueno":"VICTOR","n1":"169","n2":"692","id":"237"},"VICTOR_238":{"dueno":"VICTOR","n1":"384","n2":"907","id":"238"},"VICTOR_239":{"dueno":"VICTOR","n1":"385","n2":"908","id":"239"},"VICTOR_240":{"dueno":"VICTOR","n1":"388","n2":"911","id":"240"},"VICTOR_241":{"dueno":"VICTOR","n1":"389","n2":"912","id":"241"},"VICTOR_242":{"dueno":"VICTOR","n1":"392","n2":"915","id":"242"},"VICTOR_243":{"dueno":"VICTOR","n1":"393","n2":"916","id":"243"},"VICTOR_244":{"dueno":"VICTOR","n1":"396","n2":"919","id":"244"},"VICTOR_245":{"dueno":"VICTOR","n1":"397","n2":"920","id":"245"},"VICTOR_246":{"dueno":"VICTOR","n1":"106","n2":"629","id":"246"},"VICTOR_247":{"dueno":"VICTOR","n1":"103","n2":"626","id":"247"},"VICTOR_248":{"dueno":"VICTOR","n1":"338","n2":"861","id":"248"},"VICTOR_249":{"dueno":"VICTOR","n1":"447","n2":"970","id":"249"},"VICTOR_250":{"dueno":"VICTOR","n1":"050","n2":"573","id":"250"},"PEDRO_1":{"dueno":"PEDRO","n1":"159","n2":"682","id":"1"},"PEDRO_2":{"dueno":"PEDRO","n1":"150","n2":"673","id":"2"},"PEDRO_3":{"dueno":"PEDRO","n1":"132","n2":"655","id":"3"},"PEDRO_4":{"dueno":"PEDRO","n1":"121","n2":"644","id":"4"},"PEDRO_5":{"dueno":"PEDRO","n1":"112","n2":"635","id":"5"},"PEDRO_6":{"dueno":"PEDRO","n1":"101","n2":"624","id":"6"},"PEDRO_7":{"dueno":"PEDRO","n1":"313","n2":"836","id":"7"},"PEDRO_8":{"dueno":"PEDRO","n1":"191","n2":"714","id":"8"},"PEDRO_9":{"dueno":"PEDRO","n1":"276","n2":"799","id":"9"},"PEDRO_10":{"dueno":"PEDRO","n1":"201","n2":"724","id":"10"},"PEDRO_11":{"dueno":"PEDRO","n1":"221","n2":"744","id":"11"},"PEDRO_12":{"dueno":"PEDRO","n1":"241","n2":"764","id":"12"},"PEDRO_13":{"dueno":"PEDRO","n1":"261","n2":"784","id":"13"},"PEDRO_14":{"dueno":"PEDRO","n1":"300","n2":"823","id":"14"},"PEDRO_15":{"dueno":"PEDRO","n1":"320","n2":"843","id":"15"},"PEDRO_16":{"dueno":"PEDRO","n1":"340","n2":"863","id":"16"},"PEDRO_17":{"dueno":"PEDRO","n1":"366","n2":"889","id":"17"},"PEDRO_18":{"dueno":"PEDRO","n1":"333","n2":"856","id":"18"},"PEDRO_19":{"dueno":"PEDRO","n1":"371","n2":"894","id":"19"},"PEDRO_20":{"dueno":"PEDRO","n1":"353","n2":"876","id":"20"},"PEDRO_21":{"dueno":"PEDRO","n1":"395","n2":"918","id":"21"},"PEDRO_22":{"dueno":"PEDRO","n1":"104","n2":"627","id":"22"},"PEDRO_23":{"dueno":"PEDRO","n1":"113","n2":"636","id":"23"},"PEDRO_24":{"dueno":"PEDRO","n1":"124","n2":"647","id":"24"},"PEDRO_25":{"dueno":"PEDRO","n1":"151","n2":"674","id":"25"},"PEDRO_26":{"dueno":"PEDRO","n1":"162","n2":"685","id":"26"},"PEDRO_27":{"dueno":"PEDRO","n1":"171","n2":"694","id":"27"},"PEDRO_28":{"dueno":"PEDRO","n1":"391","n2":"914","id":"28"},"PEDRO_29":{"dueno":"PEDRO","n1":"240","n2":"763","id":"29"},"PEDRO_30":{"dueno":"PEDRO","n1":"232","n2":"755","id":"30"},"PEDRO_31":{"dueno":"PEDRO","n1":"252","n2":"775","id":"31"},"PEDRO_32":{"dueno":"PEDRO","n1":"272","n2":"795","id":"32"},"PEDRO_33":{"dueno":"PEDRO","n1":"309","n2":"832","id":"33"},"PEDRO_34":{"dueno":"PEDRO","n1":"329","n2":"852","id":"34"},"PEDRO_35":{"dueno":"PEDRO","n1":"349","n2":"872","id":"35"},"PEDRO_36":{"dueno":"PEDRO","n1":"367","n2":"890","id":"36"},"PEDRO_37":{"dueno":"PEDRO","n1":"387","n2":"910","id":"37"},"PEDRO_38":{"dueno":"PEDRO","n1":"280","n2":"803","id":"38"},"PEDRO_39":{"dueno":"PEDRO","n1":"293","n2":"816","id":"39"},"PEDRO_40":{"dueno":"PEDRO","n1":"213","n2":"736","id":"40"},"PEDRO_41":{"dueno":"PEDRO","n1":"273","n2":"796","id":"41"},"PEDRO_42":{"dueno":"PEDRO","n1":"253","n2":"776","id":"42"},"PEDRO_43":{"dueno":"PEDRO","n1":"296","n2":"819","id":"43"},"PEDRO_44":{"dueno":"PEDRO","n1":"312","n2":"835","id":"44"},"PEDRO_45":{"dueno":"PEDRO","n1":"332","n2":"855","id":"45"},"PEDRO_46":{"dueno":"PEDRO","n1":"352","n2":"875","id":"46"},"PEDRO_47":{"dueno":"PEDRO","n1":"370","n2":"893","id":"47"},"PEDRO_48":{"dueno":"PEDRO","n1":"220","n2":"743","id":"48"},"PEDRO_49":{"dueno":"PEDRO","n1":"200","n2":"723","id":"49"},"PEDRO_50":{"dueno":"PEDRO","n1":"444","n2":"967","id":"50"},"PEDRO_51":{"dueno":"PEDRO","n1":"007","n2":"530","id":"51"},"PEDRO_52":{"dueno":"PEDRO","n1":"027","n2":"550","id":"52"},"PEDRO_53":{"dueno":"PEDRO","n1":"304","n2":"827","id":"53"},"PEDRO_54":{"dueno":"PEDRO","n1":"324","n2":"847","id":"54"},"PEDRO_55":{"dueno":"PEDRO","n1":"344","n2":"867","id":"55"},"PEDRO_56":{"dueno":"PEDRO","n1":"362","n2":"885","id":"56"},"PEDRO_57":{"dueno":"PEDRO","n1":"382","n2":"905","id":"57"},"PEDRO_58":{"dueno":"PEDRO","n1":"047","n2":"570","id":"58"},"PEDRO_59":{"dueno":"PEDRO","n1":"204","n2":"727","id":"59"},"PEDRO_60":{"dueno":"PEDRO","n1":"224","n2":"747","id":"60"},"PEDRO_61":{"dueno":"PEDRO","n1":"244","n2":"767","id":"61"},"PEDRO_62":{"dueno":"PEDRO","n1":"264","n2":"787","id":"62"},"PEDRO_63":{"dueno":"PEDRO","n1":"284","n2":"807","id":"63"},"PEDRO_64":{"dueno":"PEDRO","n1":"301","n2":"824","id":"64"},"PEDRO_65":{"dueno":"PEDRO","n1":"341","n2":"864","id":"65"},"PEDRO_66":{"dueno":"PEDRO","n1":"364","n2":"887","id":"66"},"PEDRO_67":{"dueno":"PEDRO","n1":"379","n2":"902","id":"67"},"PEDRO_68":{"dueno":"PEDRO","n1":"425","n2":"948","id":"68"},"PEDRO_69":{"dueno":"PEDRO","n1":"465","n2":"988","id":"69"},"PEDRO_70":{"dueno":"PEDRO","n1":"485","n2":"508","id":"70"},"PEDRO_71":{"dueno":"PEDRO","n1":"028","n2":"551","id":"71"},"PEDRO_72":{"dueno":"PEDRO","n1":"068","n2":"591","id":"72"},"PEDRO_73":{"dueno":"PEDRO","n1":"048","n2":"571","id":"73"},"PEDRO_74":{"dueno":"PEDRO","n1":"088","n2":"611","id":"74"},"PEDRO_75":{"dueno":"PEDRO","n1":"408","n2":"931","id":"75"},"PEDRO_76":{"dueno":"PEDRO","n1":"448","n2":"971","id":"76"},"PEDRO_77":{"dueno":"PEDRO","n1":"468","n2":"991","id":"77"},"PEDRO_78":{"dueno":"PEDRO","n1":"464","n2":"987","id":"78"},"PEDRO_79":{"dueno":"PEDRO","n1":"484","n2":"507","id":"79"},"PEDRO_80":{"dueno":"PEDRO","n1":"003","n2":"526","id":"80"},"PEDRO_81":{"dueno":"PEDRO","n1":"043","n2":"566","id":"81"},"PEDRO_82":{"dueno":"PEDRO","n1":"063","n2":"586","id":"82"},"PEDRO_83":{"dueno":"PEDRO","n1":"083","n2":"606","id":"83"},"PEDRO_84":{"dueno":"PEDRO","n1":"401","n2":"924","id":"84"},"PEDRO_85":{"dueno":"PEDRO","n1":"421","n2":"944","id":"85"},"PEDRO_86":{"dueno":"PEDRO","n1":"441","n2":"964","id":"86"},"PEDRO_87":{"dueno":"PEDRO","n1":"481","n2":"504","id":"87"},"PEDRO_88":{"dueno":"PEDRO","n1":"404","n2":"927","id":"88"},"PEDRO_89":{"dueno":"PEDRO","n1":"084","n2":"607","id":"89"},"PEDRO_90":{"dueno":"PEDRO","n1":"024","n2":"547","id":"90"},"PEDRO_91":{"dueno":"PEDRO","n1":"476","n2":"999","id":"91"},"PEDRO_92":{"dueno":"PEDRO","n1":"436","n2":"959","id":"92"},"PEDRO_93":{"dueno":"PEDRO","n1":"416","n2":"939","id":"93"},"PEDRO_94":{"dueno":"PEDRO","n1":"096","n2":"619","id":"94"},"PEDRO_95":{"dueno":"PEDRO","n1":"076","n2":"599","id":"95"},"PEDRO_96":{"dueno":"PEDRO","n1":"056","n2":"579","id":"96"},"PEDRO_97":{"dueno":"PEDRO","n1":"492","n2":"515","id":"97"},"PEDRO_98":{"dueno":"PEDRO","n1":"472","n2":"995","id":"98"},"PEDRO_99":{"dueno":"PEDRO","n1":"297","n2":"820","id":"99"},"PEDRO_100":{"dueno":"PEDRO","n1":"257","n2":"780","id":"100"},"PEDRO_101":{"dueno":"PEDRO","n1":"035","n2":"558","id":"101"},"PEDRO_102":{"dueno":"PEDRO","n1":"433","n2":"956","id":"102"},"PEDRO_103":{"dueno":"PEDRO","n1":"473","n2":"996","id":"103"},"PEDRO_104":{"dueno":"PEDRO","n1":"036","n2":"559","id":"104"},"PEDRO_105":{"dueno":"PEDRO","n1":"452","n2":"975","id":"105"},"PEDRO_106":{"dueno":"PEDRO","n1":"432","n2":"955","id":"106"},"PEDRO_107":{"dueno":"PEDRO","n1":"412","n2":"935","id":"107"},"PEDRO_108":{"dueno":"PEDRO","n1":"092","n2":"615","id":"108"},"PEDRO_109":{"dueno":"PEDRO","n1":"072","n2":"595","id":"109"},"PEDRO_110":{"dueno":"PEDRO","n1":"032","n2":"555","id":"110"},"PEDRO_111":{"dueno":"PEDRO","n1":"012","n2":"535","id":"111"},"PEDRO_112":{"dueno":"PEDRO","n1":"409","n2":"932","id":"112"},"PEDRO_113":{"dueno":"PEDRO","n1":"449","n2":"972","id":"113"},"PEDRO_114":{"dueno":"PEDRO","n1":"489","n2":"512","id":"114"},"PEDRO_115":{"dueno":"PEDRO","n1":"091","n2":"614","id":"115"},"PEDRO_116":{"dueno":"PEDRO","n1":"051","n2":"574","id":"116"},"PEDRO_117":{"dueno":"PEDRO","n1":"031","n2":"554","id":"117"},"PEDRO_118":{"dueno":"PEDRO","n1":"437","n2":"960","id":"118"},"PEDRO_119":{"dueno":"PEDRO","n1":"417","n2":"940","id":"119"},"PEDRO_120":{"dueno":"PEDRO","n1":"099","n2":"622","id":"120"},"PEDRO_121":{"dueno":"PEDRO","n1":"079","n2":"602","id":"121"},"PEDRO_122":{"dueno":"PEDRO","n1":"059","n2":"582","id":"122"},"PEDRO_123":{"dueno":"PEDRO","n1":"039","n2":"562","id":"123"},"PEDRO_124":{"dueno":"PEDRO","n1":"019","n2":"542","id":"124"},"PEDRO_125":{"dueno":"PEDRO","n1":"457","n2":"980","id":"125"},"PEDRO_126":{"dueno":"PEDRO","n1":"477","n2":"500","id":"126"},"PEDRO_127":{"dueno":"PEDRO","n1":"497","n2":"520","id":"127"},"PEDRO_128":{"dueno":"PEDRO","n1":"398","n2":"921","id":"128"},"PEDRO_129":{"dueno":"PEDRO","n1":"020","n2":"543","id":"129"},"PEDRO_130":{"dueno":"PEDRO","n1":"040","n2":"563","id":"130"},"PEDRO_131":{"dueno":"PEDRO","n1":"060","n2":"583","id":"131"},"PEDRO_132":{"dueno":"PEDRO","n1":"080","n2":"603","id":"132"},"PEDRO_133":{"dueno":"PEDRO","n1":"400","n2":"923","id":"133"},"PEDRO_134":{"dueno":"PEDRO","n1":"420","n2":"943","id":"134"},"PEDRO_135":{"dueno":"PEDRO","n1":"460","n2":"983","id":"135"},"PEDRO_136":{"dueno":"PEDRO","n1":"480","n2":"503","id":"136"},"PEDRO_137":{"dueno":"PEDRO","n1":"000","n2":"523","id":"137"},"PEDRO_138":{"dueno":"PEDRO","n1":"129","n2":"652","id":"138"},"PEDRO_139":{"dueno":"PEDRO","n1":"140","n2":"663","id":"139"},"PEDRO_140":{"dueno":"PEDRO","n1":"149","n2":"672","id":"140"},"PEDRO_141":{"dueno":"PEDRO","n1":"158","n2":"681","id":"141"},"PEDRO_142":{"dueno":"PEDRO","n1":"167","n2":"690","id":"142"},"PEDRO_143":{"dueno":"PEDRO","n1":"178","n2":"701","id":"143"},"PEDRO_144":{"dueno":"PEDRO","n1":"120","n2":"643","id":"144"},"PEDRO_145":{"dueno":"PEDRO","n1":"209","n2":"732","id":"145"},"PEDRO_146":{"dueno":"PEDRO","n1":"187","n2":"710","id":"146"},"PEDRO_147":{"dueno":"PEDRO","n1":"229","n2":"752","id":"147"},"PEDRO_148":{"dueno":"PEDRO","n1":"269","n2":"792","id":"148"},"PEDRO_149":{"dueno":"PEDRO","n1":"308","n2":"831","id":"149"},"PEDRO_150":{"dueno":"PEDRO","n1":"348","n2":"871","id":"150"},"PEDRO_151":{"dueno":"PEDRO","n1":"360","n2":"883","id":"151"},"PEDRO_152":{"dueno":"PEDRO","n1":"386","n2":"909","id":"152"},"PEDRO_153":{"dueno":"PEDRO","n1":"399","n2":"922","id":"153"},"PEDRO_154":{"dueno":"PEDRO","n1":"109","n2":"632","id":"154"},"PEDRO_155":{"dueno":"PEDRO","n1":"383","n2":"906","id":"155"},"PEDRO_156":{"dueno":"PEDRO","n1":"361","n2":"884","id":"156"},"PEDRO_157":{"dueno":"PEDRO","n1":"345","n2":"868","id":"157"},"PEDRO_158":{"dueno":"PEDRO","n1":"325","n2":"848","id":"158"},"PEDRO_159":{"dueno":"PEDRO","n1":"305","n2":"828","id":"159"},"PEDRO_160":{"dueno":"PEDRO","n1":"288","n2":"811","id":"160"},"PEDRO_161":{"dueno":"PEDRO","n1":"268","n2":"791","id":"161"},"PEDRO_162":{"dueno":"PEDRO","n1":"248","n2":"771","id":"162"},"PEDRO_163":{"dueno":"PEDRO","n1":"228","n2":"751","id":"163"},"PEDRO_164":{"dueno":"PEDRO","n1":"208","n2":"731","id":"164"},"PEDRO_165":{"dueno":"PEDRO","n1":"249","n2":"772","id":"165"},"PEDRO_166":{"dueno":"PEDRO","n1":"285","n2":"808","id":"166"},"PEDRO_167":{"dueno":"PEDRO","n1":"357","n2":"880","id":"167"},"PEDRO_168":{"dueno":"PEDRO","n1":"292","n2":"815","id":"168"},"PEDRO_169":{"dueno":"PEDRO","n1":"237","n2":"760","id":"169"},"PEDRO_170":{"dueno":"PEDRO","n1":"128","n2":"651","id":"170"},"PEDRO_171":{"dueno":"PEDRO","n1":"394","n2":"917","id":"171"},"PEDRO_172":{"dueno":"PEDRO","n1":"516","n2":"493","id":"172"},"PEDRO_173":{"dueno":"PEDRO","n1":"100","n2":"623","id":"173"},"PEDRO_174":{"dueno":"PEDRO","n1":"429","n2":"952","id":"174"},"PEDRO_175":{"dueno":"PEDRO","n1":"316","n2":"839","id":"175"},"PEDRO_176":{"dueno":"PEDRO","n1":"289","n2":"812","id":"176"},"PEDRO_177":{"dueno":"PEDRO","n1":"064","n2":"587","id":"177"},"PEDRO_178":{"dueno":"PEDRO","n1":"008","n2":"531","id":"178"},"PEDRO_179":{"dueno":"PEDRO","n1":"186","n2":"709","id":"179"},"PEDRO_180":{"dueno":"PEDRO","n1":"190","n2":"713","id":"180"},"PEDRO_181":{"dueno":"PEDRO","n1":"469","n2":"992","id":"181"},"PEDRO_182":{"dueno":"PEDRO","n1":"011","n2":"534","id":"182"},"PEDRO_183":{"dueno":"PEDRO","n1":"004","n2":"527","id":"183"},"PEDRO_184":{"dueno":"PEDRO","n1":"378","n2":"901","id":"184"},"PEDRO_185":{"dueno":"PEDRO","n1":"205","n2":"728","id":"185"},"PEDRO_186":{"dueno":"PEDRO","n1":"175","n2":"698","id":"186"},"PEDRO_187":{"dueno":"PEDRO","n1":"445","n2":"968","id":"187"},"PEDRO_188":{"dueno":"PEDRO","n1":"424","n2":"947","id":"188"},"PEDRO_189":{"dueno":"PEDRO","n1":"216","n2":"739","id":"189"},"PEDRO_190":{"dueno":"PEDRO","n1":"117","n2":"640","id":"190"},"PEDRO_191":{"dueno":"PEDRO","n1":"328","n2":"851","id":"191"},"PEDRO_192":{"dueno":"PEDRO","n1":"488","n2":"511","id":"192"},"PEDRO_193":{"dueno":"PEDRO","n1":"166","n2":"689","id":"193"},"PEDRO_194":{"dueno":"PEDRO","n1":"260","n2":"783","id":"194"},"PEDRO_195":{"dueno":"PEDRO","n1":"133","n2":"656","id":"195"},"PEDRO_196":{"dueno":"PEDRO","n1":"155","n2":"678","id":"196"},"PEDRO_197":{"dueno":"PEDRO","n1":"236","n2":"759","id":"197"},"PEDRO_198":{"dueno":"PEDRO","n1":"183","n2":"706","id":"198"},"PEDRO_199":{"dueno":"PEDRO","n1":"182","n2":"705","id":"199"},"PEDRO_200":{"dueno":"PEDRO","n1":"453","n2":"976","id":"200"},"PEDRO_201":{"dueno":"PEDRO","n1":"148","n2":"671","id":"201"},"PEDRO_202":{"dueno":"PEDRO","n1":"413","n2":"936","id":"202"},"PEDRO_203":{"dueno":"PEDRO","n1":"095","n2":"618","id":"203"},"PEDRO_204":{"dueno":"PEDRO","n1":"174","n2":"697","id":"204"},"PEDRO_205":{"dueno":"PEDRO","n1":"212","n2":"735","id":"205"},"PEDRO_206":{"dueno":"PEDRO","n1":"137","n2":"660","id":"206"},"PEDRO_207":{"dueno":"PEDRO","n1":"256","n2":"779","id":"207"},"PEDRO_208":{"dueno":"PEDRO","n1":"317","n2":"840","id":"208"},"PEDRO_209":{"dueno":"PEDRO","n1":"075","n2":"598","id":"209"},"PEDRO_210":{"dueno":"PEDRO","n1":"125","n2":"648","id":"210"},"PEDRO_211":{"dueno":"PEDRO","n1":"245","n2":"768","id":"211"},"PEDRO_212":{"dueno":"PEDRO","n1":"321","n2":"844","id":"212"},"PEDRO_213":{"dueno":"PEDRO","n1":"440","n2":"963","id":"213"},"PEDRO_214":{"dueno":"PEDRO","n1":"055","n2":"578","id":"214"},"PEDRO_215":{"dueno":"PEDRO","n1":"144","n2":"667","id":"215"},"PEDRO_216":{"dueno":"PEDRO","n1":"225","n2":"748","id":"216"},"PEDRO_217":{"dueno":"PEDRO","n1":"265","n2":"788","id":"217"},"PEDRO_218":{"dueno":"PEDRO","n1":"428","n2":"951","id":"218"},"PEDRO_219":{"dueno":"PEDRO","n1":"898","n2":"375","id":"219"},"PEDRO_220":{"dueno":"PEDRO","n1":"928","n2":"405","id":"220"},"PEDRO_221":{"dueno":"PEDRO","n1":"594","n2":"071","id":"221"},"PEDRO_222":{"dueno":"PEDRO","n1":"631","n2":"108","id":"222"},"PEDRO_223":{"dueno":"PEDRO","n1":"804","n2":"281","id":"223"},"PEDRO_224":{"dueno":"PEDRO","n1":"860","n2":"337","id":"224"},"PEDRO_225":{"dueno":"PEDRO","n1":"984","n2":"461","id":"225"},"PEDRO_226":{"dueno":"PEDRO","n1":"575","n2":"052","id":"226"},"PEDRO_227":{"dueno":"PEDRO","n1":"693","n2":"170","id":"227"},"PEDRO_228":{"dueno":"PEDRO","n1":"374","n2":"897","id":"228"},"PEDRO_229":{"dueno":"PEDRO","n1":"087","n2":"610","id":"229"},"PEDRO_230":{"dueno":"PEDRO","n1":"044","n2":"567","id":"230"},"PEDRO_231":{"dueno":"PEDRO","n1":"067","n2":"590","id":"231"},"PEDRO_232":{"dueno":"PEDRO","n1":"163","n2":"686","id":"232"},"PEDRO_233":{"dueno":"PEDRO","n1":"277","n2":"800","id":"233"},"PEDRO_234":{"dueno":"PEDRO","n1":"496","n2":"519","id":"234"},"PEDRO_235":{"dueno":"PEDRO","n1":"154","n2":"677","id":"235"},"PEDRO_236":{"dueno":"PEDRO","n1":"105","n2":"628","id":"236"},"PEDRO_237":{"dueno":"PEDRO","n1":"145","n2":"668","id":"237"},"PEDRO_238":{"dueno":"PEDRO","n1":"336","n2":"859","id":"238"},"PEDRO_239":{"dueno":"PEDRO","n1":"023","n2":"546","id":"239"},"PEDRO_240":{"dueno":"PEDRO","n1":"356","n2":"879","id":"240"},"PEDRO_241":{"dueno":"PEDRO","n1":"179","n2":"702","id":"241"},"PEDRO_242":{"dueno":"PEDRO","n1":"390","n2":"913","id":"242"},"PEDRO_243":{"dueno":"PEDRO","n1":"217","n2":"740","id":"243"},"PEDRO_244":{"dueno":"PEDRO","n1":"136","n2":"659","id":"244"},"PEDRO_245":{"dueno":"PEDRO","n1":"116","n2":"639","id":"245"},"PEDRO_246":{"dueno":"PEDRO","n1":"233","n2":"756","id":"246"},"PEDRO_247":{"dueno":"PEDRO","n1":"016","n2":"539","id":"247"},"PEDRO_248":{"dueno":"PEDRO","n1":"456","n2":"979","id":"248"},"PEDRO_249":{"dueno":"PEDRO","n1":"141","n2":"664","id":"249"},"PEDRO_250":{"dueno":"PEDRO","n1":"015","n2":"538","id":"250"}};
+const NUMIDX={"033":"VICTOR_1","556":"VICTOR_1","034":"VICTOR_2","557":"VICTOR_2","037":"VICTOR_3","560":"VICTOR_3","038":"VICTOR_4","561":"VICTOR_4","041":"VICTOR_5","564":"VICTOR_5","049":"VICTOR_6","572":"VICTOR_6","045":"VICTOR_7","568":"VICTOR_7","046":"VICTOR_8","569":"VICTOR_8","042":"VICTOR_9","565":"VICTOR_9","053":"VICTOR_10","576":"VICTOR_10","013":"VICTOR_11","536":"VICTOR_11","014":"VICTOR_12","537":"VICTOR_12","017":"VICTOR_13","540":"VICTOR_13","018":"VICTOR_14","541":"VICTOR_14","021":"VICTOR_15","544":"VICTOR_15","022":"VICTOR_16","545":"VICTOR_16","025":"VICTOR_17","548":"VICTOR_17","026":"VICTOR_18","549":"VICTOR_18","029":"VICTOR_19","552":"VICTOR_19","030":"VICTOR_20","553":"VICTOR_20","194":"VICTOR_21","717":"VICTOR_21","195":"VICTOR_22","718":"VICTOR_22","199":"VICTOR_23","722":"VICTOR_23","001":"VICTOR_24","524":"VICTOR_24","002":"VICTOR_25","525":"VICTOR_25","198":"VICTOR_26","721":"VICTOR_26","005":"VICTOR_27","528":"VICTOR_27","006":"VICTOR_28","529":"VICTOR_28","009":"VICTOR_29","532":"VICTOR_29","010":"VICTOR_30","533":"VICTOR_30","054":"VICTOR_31","577":"VICTOR_31","057":"VICTOR_32","580":"VICTOR_32","058":"VICTOR_33","581":"VICTOR_33","061":"VICTOR_34","584":"VICTOR_34","062":"VICTOR_35","585":"VICTOR_35","065":"VICTOR_36","588":"VICTOR_36","066":"VICTOR_37","589":"VICTOR_37","069":"VICTOR_38","592":"VICTOR_38","070":"VICTOR_39","593":"VICTOR_39","073":"VICTOR_40","596":"VICTOR_40","459":"VICTOR_41","982":"VICTOR_41","462":"VICTOR_42","985":"VICTOR_42","463":"VICTOR_43","986":"VICTOR_43","466":"VICTOR_44","989":"VICTOR_44","467":"VICTOR_45","990":"VICTOR_45","470":"VICTOR_46","993":"VICTOR_46","471":"VICTOR_47","994":"VICTOR_47","474":"VICTOR_48","997":"VICTOR_48","475":"VICTOR_49","998":"VICTOR_49","478":"VICTOR_50","501":"VICTOR_50","435":"VICTOR_51","958":"VICTOR_51","438":"VICTOR_52","961":"VICTOR_52","439":"VICTOR_53","962":"VICTOR_53","442":"VICTOR_54","965":"VICTOR_54","443":"VICTOR_55","966":"VICTOR_55","446":"VICTOR_56","969":"VICTOR_56","451":"VICTOR_57","974":"VICTOR_57","454":"VICTOR_58","977":"VICTOR_58","455":"VICTOR_59","978":"VICTOR_59","458":"VICTOR_60","981":"VICTOR_60","415":"VICTOR_61","938":"VICTOR_61","418":"VICTOR_62","941":"VICTOR_62","419":"VICTOR_63","942":"VICTOR_63","422":"VICTOR_64","945":"VICTOR_64","423":"VICTOR_65","946":"VICTOR_65","426":"VICTOR_66","949":"VICTOR_66","427":"VICTOR_67","950":"VICTOR_67","430":"VICTOR_68","953":"VICTOR_68","431":"VICTOR_69","954":"VICTOR_69","434":"VICTOR_70","957":"VICTOR_70","094":"VICTOR_71","617":"VICTOR_71","097":"VICTOR_72","620":"VICTOR_72","098":"VICTOR_73","621":"VICTOR_73","402":"VICTOR_74","925":"VICTOR_74","403":"VICTOR_75","926":"VICTOR_75","406":"VICTOR_76","929":"VICTOR_76","407":"VICTOR_77","930":"VICTOR_77","410":"VICTOR_78","933":"VICTOR_78","411":"VICTOR_79","934":"VICTOR_79","414":"VICTOR_80","937":"VICTOR_80","074":"VICTOR_81","597":"VICTOR_81","077":"VICTOR_82","600":"VICTOR_82","078":"VICTOR_83","601":"VICTOR_83","081":"VICTOR_84","604":"VICTOR_84","082":"VICTOR_85","605":"VICTOR_85","085":"VICTOR_86","608":"VICTOR_86","086":"VICTOR_87","609":"VICTOR_87","089":"VICTOR_88","612":"VICTOR_88","090":"VICTOR_89","613":"VICTOR_89","093":"VICTOR_90","616":"VICTOR_90","259":"VICTOR_91","782":"VICTOR_91","262":"VICTOR_92","785":"VICTOR_92","263":"VICTOR_93","786":"VICTOR_93","266":"VICTOR_94","789":"VICTOR_94","267":"VICTOR_95","790":"VICTOR_95","270":"VICTOR_96","793":"VICTOR_96","271":"VICTOR_97","794":"VICTOR_97","274":"VICTOR_98","797":"VICTOR_98","275":"VICTOR_99","798":"VICTOR_99","278":"VICTOR_100","801":"VICTOR_100","239":"VICTOR_101","762":"VICTOR_101","242":"VICTOR_102","765":"VICTOR_102","243":"VICTOR_103","766":"VICTOR_103","246":"VICTOR_104","769":"VICTOR_104","247":"VICTOR_105","770":"VICTOR_105","250":"VICTOR_106","773":"VICTOR_106","251":"VICTOR_107","774":"VICTOR_107","254":"VICTOR_108","777":"VICTOR_108","255":"VICTOR_109","778":"VICTOR_109","258":"VICTOR_110","781":"VICTOR_110","219":"VICTOR_111","742":"VICTOR_111","222":"VICTOR_112","745":"VICTOR_112","223":"VICTOR_113","746":"VICTOR_113","226":"VICTOR_114","749":"VICTOR_114","227":"VICTOR_115","750":"VICTOR_115","230":"VICTOR_116","753":"VICTOR_116","231":"VICTOR_117","754":"VICTOR_117","234":"VICTOR_118","757":"VICTOR_118","235":"VICTOR_119","758":"VICTOR_119","238":"VICTOR_120","761":"VICTOR_120","499":"VICTOR_121","522":"VICTOR_121","202":"VICTOR_122","725":"VICTOR_122","203":"VICTOR_123","726":"VICTOR_123","206":"VICTOR_124","729":"VICTOR_124","207":"VICTOR_125","730":"VICTOR_125","210":"VICTOR_126","733":"VICTOR_126","211":"VICTOR_127","734":"VICTOR_127","214":"VICTOR_128","737":"VICTOR_128","215":"VICTOR_129","738":"VICTOR_129","218":"VICTOR_130","741":"VICTOR_130","479":"VICTOR_131","502":"VICTOR_131","483":"VICTOR_132","506":"VICTOR_132","482":"VICTOR_133","505":"VICTOR_133","486":"VICTOR_134","509":"VICTOR_134","487":"VICTOR_135","510":"VICTOR_135","490":"VICTOR_136","513":"VICTOR_136","491":"VICTOR_137","514":"VICTOR_137","494":"VICTOR_138","517":"VICTOR_138","495":"VICTOR_139","518":"VICTOR_139","498":"VICTOR_140","521":"VICTOR_140","363":"VICTOR_141","886":"VICTOR_141","365":"VICTOR_142","888":"VICTOR_142","368":"VICTOR_143","891":"VICTOR_143","369":"VICTOR_144","892":"VICTOR_144","372":"VICTOR_145","895":"VICTOR_145","373":"VICTOR_146","896":"VICTOR_146","376":"VICTOR_147","899":"VICTOR_147","377":"VICTOR_148","900":"VICTOR_148","380":"VICTOR_149","903":"VICTOR_149","381":"VICTOR_150","904":"VICTOR_150","342":"VICTOR_151","865":"VICTOR_151","343":"VICTOR_152","866":"VICTOR_152","346":"VICTOR_153","869":"VICTOR_153","347":"VICTOR_154","870":"VICTOR_154","350":"VICTOR_155","873":"VICTOR_155","351":"VICTOR_156","874":"VICTOR_156","354":"VICTOR_157","877":"VICTOR_157","355":"VICTOR_158","878":"VICTOR_158","358":"VICTOR_159","881":"VICTOR_159","359":"VICTOR_160","882":"VICTOR_160","319":"VICTOR_161","842":"VICTOR_161","322":"VICTOR_162","845":"VICTOR_162","323":"VICTOR_163","846":"VICTOR_163","326":"VICTOR_164","849":"VICTOR_164","327":"VICTOR_165","850":"VICTOR_165","330":"VICTOR_166","853":"VICTOR_166","331":"VICTOR_167","854":"VICTOR_167","334":"VICTOR_168","857":"VICTOR_168","335":"VICTOR_169","858":"VICTOR_169","339":"VICTOR_170","862":"VICTOR_170","299":"VICTOR_171","822":"VICTOR_171","302":"VICTOR_172","825":"VICTOR_172","303":"VICTOR_173","826":"VICTOR_173","306":"VICTOR_174","829":"VICTOR_174","307":"VICTOR_175","830":"VICTOR_175","310":"VICTOR_176","833":"VICTOR_176","311":"VICTOR_177","834":"VICTOR_177","314":"VICTOR_178","837":"VICTOR_178","315":"VICTOR_179","838":"VICTOR_179","318":"VICTOR_180","841":"VICTOR_180","282":"VICTOR_181","805":"VICTOR_181","279":"VICTOR_182","802":"VICTOR_182","283":"VICTOR_183","806":"VICTOR_183","286":"VICTOR_184","809":"VICTOR_184","287":"VICTOR_185","810":"VICTOR_185","290":"VICTOR_186","813":"VICTOR_186","291":"VICTOR_187","814":"VICTOR_187","294":"VICTOR_188","817":"VICTOR_188","295":"VICTOR_189","818":"VICTOR_189","298":"VICTOR_190","821":"VICTOR_190","164":"VICTOR_191","687":"VICTOR_191","193":"VICTOR_192","716":"VICTOR_192","177":"VICTOR_193","700":"VICTOR_193","176":"VICTOR_194","699":"VICTOR_194","180":"VICTOR_195","703":"VICTOR_195","181":"VICTOR_196","704":"VICTOR_196","184":"VICTOR_197","707":"VICTOR_197","157":"VICTOR_198","680":"VICTOR_198","156":"VICTOR_199","679":"VICTOR_199","160":"VICTOR_200","683":"VICTOR_200","161":"VICTOR_201","684":"VICTOR_201","168":"VICTOR_202","691":"VICTOR_202","450":"VICTOR_203","973":"VICTOR_203","147":"VICTOR_204","670":"VICTOR_204","146":"VICTOR_205","669":"VICTOR_205","143":"VICTOR_206","666":"VICTOR_206","142":"VICTOR_207","665":"VICTOR_207","139":"VICTOR_208","662":"VICTOR_208","138":"VICTOR_209","661":"VICTOR_209","185":"VICTOR_210","708":"VICTOR_210","188":"VICTOR_211","711":"VICTOR_211","189":"VICTOR_212","712":"VICTOR_212","192":"VICTOR_213","715":"VICTOR_213","165":"VICTOR_214","688":"VICTOR_214","173":"VICTOR_215","696":"VICTOR_215","118":"VICTOR_216","641":"VICTOR_216","135":"VICTOR_217","658":"VICTOR_217","134":"VICTOR_218","657":"VICTOR_218","131":"VICTOR_219","654":"VICTOR_219","130":"VICTOR_220","653":"VICTOR_220","127":"VICTOR_221","650":"VICTOR_221","196":"VICTOR_222","719":"VICTOR_222","197":"VICTOR_223","720":"VICTOR_223","153":"VICTOR_224","676":"VICTOR_224","152":"VICTOR_225","675":"VICTOR_225","172":"VICTOR_226","695":"VICTOR_226","102":"VICTOR_227","625":"VICTOR_227","115":"VICTOR_228","638":"VICTOR_228","114":"VICTOR_229","637":"VICTOR_229","111":"VICTOR_230","634":"VICTOR_230","110":"VICTOR_231","633":"VICTOR_231","107":"VICTOR_232","630":"VICTOR_232","126":"VICTOR_233","649":"VICTOR_233","123":"VICTOR_234","646":"VICTOR_234","122":"VICTOR_235","645":"VICTOR_235","119":"VICTOR_236","642":"VICTOR_236","169":"VICTOR_237","692":"VICTOR_237","384":"VICTOR_238","907":"VICTOR_238","385":"VICTOR_239","908":"VICTOR_239","388":"VICTOR_240","911":"VICTOR_240","389":"VICTOR_241","912":"VICTOR_241","392":"VICTOR_242","915":"VICTOR_242","393":"VICTOR_243","916":"VICTOR_243","396":"VICTOR_244","919":"VICTOR_244","397":"VICTOR_245","920":"VICTOR_245","106":"VICTOR_246","629":"VICTOR_246","103":"VICTOR_247","626":"VICTOR_247","338":"VICTOR_248","861":"VICTOR_248","447":"VICTOR_249","970":"VICTOR_249","050":"VICTOR_250","573":"VICTOR_250","159":"PEDRO_1","682":"PEDRO_1","150":"PEDRO_2","673":"PEDRO_2","132":"PEDRO_3","655":"PEDRO_3","121":"PEDRO_4","644":"PEDRO_4","112":"PEDRO_5","635":"PEDRO_5","101":"PEDRO_6","624":"PEDRO_6","313":"PEDRO_7","836":"PEDRO_7","191":"PEDRO_8","714":"PEDRO_8","276":"PEDRO_9","799":"PEDRO_9","201":"PEDRO_10","724":"PEDRO_10","221":"PEDRO_11","744":"PEDRO_11","241":"PEDRO_12","764":"PEDRO_12","261":"PEDRO_13","784":"PEDRO_13","300":"PEDRO_14","823":"PEDRO_14","320":"PEDRO_15","843":"PEDRO_15","340":"PEDRO_16","863":"PEDRO_16","366":"PEDRO_17","889":"PEDRO_17","333":"PEDRO_18","856":"PEDRO_18","371":"PEDRO_19","894":"PEDRO_19","353":"PEDRO_20","876":"PEDRO_20","395":"PEDRO_21","918":"PEDRO_21","104":"PEDRO_22","627":"PEDRO_22","113":"PEDRO_23","636":"PEDRO_23","124":"PEDRO_24","647":"PEDRO_24","151":"PEDRO_25","674":"PEDRO_25","162":"PEDRO_26","685":"PEDRO_26","171":"PEDRO_27","694":"PEDRO_27","391":"PEDRO_28","914":"PEDRO_28","240":"PEDRO_29","763":"PEDRO_29","232":"PEDRO_30","755":"PEDRO_30","252":"PEDRO_31","775":"PEDRO_31","272":"PEDRO_32","795":"PEDRO_32","309":"PEDRO_33","832":"PEDRO_33","329":"PEDRO_34","852":"PEDRO_34","349":"PEDRO_35","872":"PEDRO_35","367":"PEDRO_36","890":"PEDRO_36","387":"PEDRO_37","910":"PEDRO_37","280":"PEDRO_38","803":"PEDRO_38","293":"PEDRO_39","816":"PEDRO_39","213":"PEDRO_40","736":"PEDRO_40","273":"PEDRO_41","796":"PEDRO_41","253":"PEDRO_42","776":"PEDRO_42","296":"PEDRO_43","819":"PEDRO_43","312":"PEDRO_44","835":"PEDRO_44","332":"PEDRO_45","855":"PEDRO_45","352":"PEDRO_46","875":"PEDRO_46","370":"PEDRO_47","893":"PEDRO_47","220":"PEDRO_48","743":"PEDRO_48","200":"PEDRO_49","723":"PEDRO_49","444":"PEDRO_50","967":"PEDRO_50","007":"PEDRO_51","530":"PEDRO_51","027":"PEDRO_52","550":"PEDRO_52","304":"PEDRO_53","827":"PEDRO_53","324":"PEDRO_54","847":"PEDRO_54","344":"PEDRO_55","867":"PEDRO_55","362":"PEDRO_56","885":"PEDRO_56","382":"PEDRO_57","905":"PEDRO_57","047":"PEDRO_58","570":"PEDRO_58","204":"PEDRO_59","727":"PEDRO_59","224":"PEDRO_60","747":"PEDRO_60","244":"PEDRO_61","767":"PEDRO_61","264":"PEDRO_62","787":"PEDRO_62","284":"PEDRO_63","807":"PEDRO_63","301":"PEDRO_64","824":"PEDRO_64","341":"PEDRO_65","864":"PEDRO_65","364":"PEDRO_66","887":"PEDRO_66","379":"PEDRO_67","902":"PEDRO_67","425":"PEDRO_68","948":"PEDRO_68","465":"PEDRO_69","988":"PEDRO_69","485":"PEDRO_70","508":"PEDRO_70","028":"PEDRO_71","551":"PEDRO_71","068":"PEDRO_72","591":"PEDRO_72","048":"PEDRO_73","571":"PEDRO_73","088":"PEDRO_74","611":"PEDRO_74","408":"PEDRO_75","931":"PEDRO_75","448":"PEDRO_76","971":"PEDRO_76","468":"PEDRO_77","991":"PEDRO_77","464":"PEDRO_78","987":"PEDRO_78","484":"PEDRO_79","507":"PEDRO_79","003":"PEDRO_80","526":"PEDRO_80","043":"PEDRO_81","566":"PEDRO_81","063":"PEDRO_82","586":"PEDRO_82","083":"PEDRO_83","606":"PEDRO_83","401":"PEDRO_84","924":"PEDRO_84","421":"PEDRO_85","944":"PEDRO_85","441":"PEDRO_86","964":"PEDRO_86","481":"PEDRO_87","504":"PEDRO_87","404":"PEDRO_88","927":"PEDRO_88","084":"PEDRO_89","607":"PEDRO_89","024":"PEDRO_90","547":"PEDRO_90","476":"PEDRO_91","999":"PEDRO_91","436":"PEDRO_92","959":"PEDRO_92","416":"PEDRO_93","939":"PEDRO_93","096":"PEDRO_94","619":"PEDRO_94","076":"PEDRO_95","599":"PEDRO_95","056":"PEDRO_96","579":"PEDRO_96","492":"PEDRO_97","515":"PEDRO_97","472":"PEDRO_98","995":"PEDRO_98","297":"PEDRO_99","820":"PEDRO_99","257":"PEDRO_100","780":"PEDRO_100","035":"PEDRO_101","558":"PEDRO_101","433":"PEDRO_102","956":"PEDRO_102","473":"PEDRO_103","996":"PEDRO_103","036":"PEDRO_104","559":"PEDRO_104","452":"PEDRO_105","975":"PEDRO_105","432":"PEDRO_106","955":"PEDRO_106","412":"PEDRO_107","935":"PEDRO_107","092":"PEDRO_108","615":"PEDRO_108","072":"PEDRO_109","595":"PEDRO_109","032":"PEDRO_110","555":"PEDRO_110","012":"PEDRO_111","535":"PEDRO_111","409":"PEDRO_112","932":"PEDRO_112","449":"PEDRO_113","972":"PEDRO_113","489":"PEDRO_114","512":"PEDRO_114","091":"PEDRO_115","614":"PEDRO_115","051":"PEDRO_116","574":"PEDRO_116","031":"PEDRO_117","554":"PEDRO_117","437":"PEDRO_118","960":"PEDRO_118","417":"PEDRO_119","940":"PEDRO_119","099":"PEDRO_120","622":"PEDRO_120","079":"PEDRO_121","602":"PEDRO_121","059":"PEDRO_122","582":"PEDRO_122","039":"PEDRO_123","562":"PEDRO_123","019":"PEDRO_124","542":"PEDRO_124","457":"PEDRO_125","980":"PEDRO_125","477":"PEDRO_126","500":"PEDRO_126","497":"PEDRO_127","520":"PEDRO_127","398":"PEDRO_128","921":"PEDRO_128","020":"PEDRO_129","543":"PEDRO_129","040":"PEDRO_130","563":"PEDRO_130","060":"PEDRO_131","583":"PEDRO_131","080":"PEDRO_132","603":"PEDRO_132","400":"PEDRO_133","923":"PEDRO_133","420":"PEDRO_134","943":"PEDRO_134","460":"PEDRO_135","983":"PEDRO_135","480":"PEDRO_136","503":"PEDRO_136","000":"PEDRO_137","523":"PEDRO_137","129":"PEDRO_138","652":"PEDRO_138","140":"PEDRO_139","663":"PEDRO_139","149":"PEDRO_140","672":"PEDRO_140","158":"PEDRO_141","681":"PEDRO_141","167":"PEDRO_142","690":"PEDRO_142","178":"PEDRO_143","701":"PEDRO_143","120":"PEDRO_144","643":"PEDRO_144","209":"PEDRO_145","732":"PEDRO_145","187":"PEDRO_146","710":"PEDRO_146","229":"PEDRO_147","752":"PEDRO_147","269":"PEDRO_148","792":"PEDRO_148","308":"PEDRO_149","831":"PEDRO_149","348":"PEDRO_150","871":"PEDRO_150","360":"PEDRO_151","883":"PEDRO_151","386":"PEDRO_152","909":"PEDRO_152","399":"PEDRO_153","922":"PEDRO_153","109":"PEDRO_154","632":"PEDRO_154","383":"PEDRO_155","906":"PEDRO_155","361":"PEDRO_156","884":"PEDRO_156","345":"PEDRO_157","868":"PEDRO_157","325":"PEDRO_158","848":"PEDRO_158","305":"PEDRO_159","828":"PEDRO_159","288":"PEDRO_160","811":"PEDRO_160","268":"PEDRO_161","791":"PEDRO_161","248":"PEDRO_162","771":"PEDRO_162","228":"PEDRO_163","751":"PEDRO_163","208":"PEDRO_164","731":"PEDRO_164","249":"PEDRO_165","772":"PEDRO_165","285":"PEDRO_166","808":"PEDRO_166","357":"PEDRO_167","880":"PEDRO_167","292":"PEDRO_168","815":"PEDRO_168","237":"PEDRO_169","760":"PEDRO_169","128":"PEDRO_170","651":"PEDRO_170","394":"PEDRO_171","917":"PEDRO_171","516":"PEDRO_172","493":"PEDRO_172","100":"PEDRO_173","623":"PEDRO_173","429":"PEDRO_174","952":"PEDRO_174","316":"PEDRO_175","839":"PEDRO_175","289":"PEDRO_176","812":"PEDRO_176","064":"PEDRO_177","587":"PEDRO_177","008":"PEDRO_178","531":"PEDRO_178","186":"PEDRO_179","709":"PEDRO_179","190":"PEDRO_180","713":"PEDRO_180","469":"PEDRO_181","992":"PEDRO_181","011":"PEDRO_182","534":"PEDRO_182","004":"PEDRO_183","527":"PEDRO_183","378":"PEDRO_184","901":"PEDRO_184","205":"PEDRO_185","728":"PEDRO_185","175":"PEDRO_186","698":"PEDRO_186","445":"PEDRO_187","968":"PEDRO_187","424":"PEDRO_188","947":"PEDRO_188","216":"PEDRO_189","739":"PEDRO_189","117":"PEDRO_190","640":"PEDRO_190","328":"PEDRO_191","851":"PEDRO_191","488":"PEDRO_192","511":"PEDRO_192","166":"PEDRO_193","689":"PEDRO_193","260":"PEDRO_194","783":"PEDRO_194","133":"PEDRO_195","656":"PEDRO_195","155":"PEDRO_196","678":"PEDRO_196","236":"PEDRO_197","759":"PEDRO_197","183":"PEDRO_198","706":"PEDRO_198","182":"PEDRO_199","705":"PEDRO_199","453":"PEDRO_200","976":"PEDRO_200","148":"PEDRO_201","671":"PEDRO_201","413":"PEDRO_202","936":"PEDRO_202","095":"PEDRO_203","618":"PEDRO_203","174":"PEDRO_204","697":"PEDRO_204","212":"PEDRO_205","735":"PEDRO_205","137":"PEDRO_206","660":"PEDRO_206","256":"PEDRO_207","779":"PEDRO_207","317":"PEDRO_208","840":"PEDRO_208","075":"PEDRO_209","598":"PEDRO_209","125":"PEDRO_210","648":"PEDRO_210","245":"PEDRO_211","768":"PEDRO_211","321":"PEDRO_212","844":"PEDRO_212","440":"PEDRO_213","963":"PEDRO_213","055":"PEDRO_214","578":"PEDRO_214","144":"PEDRO_215","667":"PEDRO_215","225":"PEDRO_216","748":"PEDRO_216","265":"PEDRO_217","788":"PEDRO_217","428":"PEDRO_218","951":"PEDRO_218","898":"PEDRO_219","375":"PEDRO_219","928":"PEDRO_220","405":"PEDRO_220","594":"PEDRO_221","071":"PEDRO_221","631":"PEDRO_222","108":"PEDRO_222","804":"PEDRO_223","281":"PEDRO_223","860":"PEDRO_224","337":"PEDRO_224","984":"PEDRO_225","461":"PEDRO_225","575":"PEDRO_226","052":"PEDRO_226","693":"PEDRO_227","170":"PEDRO_227","374":"PEDRO_228","897":"PEDRO_228","087":"PEDRO_229","610":"PEDRO_229","044":"PEDRO_230","567":"PEDRO_230","067":"PEDRO_231","590":"PEDRO_231","163":"PEDRO_232","686":"PEDRO_232","277":"PEDRO_233","800":"PEDRO_233","496":"PEDRO_234","519":"PEDRO_234","154":"PEDRO_235","677":"PEDRO_235","105":"PEDRO_236","628":"PEDRO_236","145":"PEDRO_237","668":"PEDRO_237","336":"PEDRO_238","859":"PEDRO_238","023":"PEDRO_239","546":"PEDRO_239","356":"PEDRO_240","879":"PEDRO_240","179":"PEDRO_241","702":"PEDRO_241","390":"PEDRO_242","913":"PEDRO_242","217":"PEDRO_243","740":"PEDRO_243","136":"PEDRO_244","659":"PEDRO_244","116":"PEDRO_245","639":"PEDRO_245","233":"PEDRO_246","756":"PEDRO_246","016":"PEDRO_247","539":"PEDRO_247","456":"PEDRO_248","979":"PEDRO_248","141":"PEDRO_249","664":"PEDRO_249","015":"PEDRO_250","538":"PEDRO_250"};
+const COMISION=5000;
+
+let cache={},currentKey=null,cargando=false,editando=false,timerEd=null;
+
+function marcarEdicion(){
+  editando=true;
+  document.getElementById("edit-banner").classList.add("show");
+  setSt("pause","✏️ EDITANDO…");
+  clearTimeout(timerEd);
+  timerEd=setTimeout(()=>toast("💡 Recuerda guardar cuando termines",""),5*60*1000);
+}
+function finEdicion(){
+  editando=false;clearTimeout(timerEd);
+  document.getElementById("edit-banner").classList.remove("show");
+}
+
+async function cargar(mostrarError){
+  if(cargando||editando)return;
+  cargando=true;setSt("spin","Sincronizando…");
+  document.getElementById("eb").classList.remove("show");
+  try{
+    const r=await fetch(API+"?action=getAllData",{redirect:"follow"});
+    const d=await r.json();
+    if(!d.ok)throw new Error(d.error||"Error del servidor");
+    Object.keys(MASTER).forEach(k=>{
+      const row=d.boletas&&d.boletas[k];
+      cache[k]=row?{
+        estado:row.estado||"LIBRE",nombre:row.nombre||"",tel:row.tel||"",
+        dir:row.dir||"",precio:Number(row.precio)||40000,abono:Number(row.abono)||0,
+        tieneVendedor:row.tieneVendedor==="SI",vendedorNombre:row.vendedorNombre||"",
+        vendidaPor:row.vendidaPor||"",fechaVenta:fmtFecha(row.fechaVenta||""),
+        notas:row.notas||"",ultimaAct:row.ultimaActualizacion||""
+      }:eb2();
+    });
+    setSt("ok","Sincronizado "+hc());
+    updHdr();
+    if(currentKey&&!editando)renderRes(document.getElementById("ni").value.padStart(3,"0"),currentKey);
+  }catch(e){
+    setSt("err","Sin conexión");
+    if(mostrarError)document.getElementById("eb").classList.add("show");
+    toast("Error: "+e.message,"err2");
+  }
+  cargando=false;
+}
+
+async function guardarSrv(key,datos){
+  setSt("spin","Guardando…");
+  try{
+    const r=await fetch(API,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},
+      body:JSON.stringify({action:"saveBoleta",clave:key,...datos}),redirect:"follow"});
+    const d=await r.json();
+    if(!d.ok)throw new Error(d.error||"Error al guardar");
+    setSt("ok","Guardado "+hc());
+    toast("✅ Guardado y sincronizado","ok2");
+    finEdicion();await cargar(false);return true;
+  }catch(e){
+    setSt("err","Error al guardar");
+    toast("❌ "+e.message,"err2");return false;
+  }
+}
+
+function showTab(id,btn){
+  document.querySelectorAll(".sec").forEach(s=>s.classList.remove("on"));
+  document.querySelectorAll(".tab").forEach(b=>b.classList.remove("on"));
+  document.getElementById("sec-"+id).classList.add("on");
+  btn.classList.add("on");
+  if(id==="listado")renderTabla();
+  if(id==="resumen")renderResumen();
+  if(id==="dashboard")renderDashboard();
+  if(id==="vendedores")renderVendedores();
+}
+
+function buscar(){
+  const raw=document.getElementById("ni").value.trim();
+  if(!raw){toast("Escribe un número","err2");return;}
+  const num=raw.padStart(3,"0");
+  const key=NUMIDX[num];
+  if(!key){toast("El número "+num+" no existe en el sistema","err2");return;}
+  currentKey=key;finEdicion();renderRes(num,key);
+}
+function limpiar(){document.getElementById("ni").value="";document.getElementById("ra").innerHTML="";currentKey=null;finEdicion();}
+
+function renderRes(nb,key){
+  const bm=MASTER[key],bs=cache[key]||eb2();
+  const h1=nb===bm.n1?"hit":"",h2=nb===bm.n2?"hit":"";
+  const ol=bm.dueno==="VICTOR"?"🎯 PAQUETE VÍCTOR":"🎯 PAQUETE PEDRO";
+  const oc=bm.dueno==="VICTOR"?"":"pedro";
+  const bg=bm.dueno==="VICTOR"?"#e8eef8":"#f3e8f8";
+  const sc2={LIBRE:"s-l",VENDIDA:"s-v",APARTADA:"s-a"}[bs.estado]||"s-l";
+  const sl2={LIBRE:"✅ DISPONIBLE",VENDIDA:"🔴 VENDIDA",APARTADA:"🟡 APARTADA"}[bs.estado];
+  const saldo=Math.max(0,bs.precio-bs.abono);
+  const comision=bs.tieneVendedor?COMISION:0;
+  const ri=bs.estado!=="LIBRE"&&bs.vendidaPor
+    ?`<div class="vb">📋 Registrada por: <strong>${esc(bs.vendidaPor)}</strong>${bs.fechaVenta?" · FECHA VENTA: "+bs.fechaVenta:""}</div>`:"";
+  const ua=bs.ultimaAct?`<p style="font-size:10px;color:var(--text2);margin-top:8px">ÚLTIMA ACTUALIZACIÓN: ${bs.ultimaAct}</p>`:"";
+  const comInfo=bs.tieneVendedor&&bs.vendedorNombre
+    ?`<div style="margin-top:8px;padding:8px 10px;background:#f3e8f8;border-radius:6px;font-size:12px;color:#4a235a">
+        🤝 COMISIÓN PARA <strong>${esc(bs.vendedorNombre)}</strong>: <strong>$${fmt(comision)}</strong>
+        &nbsp;|&nbsp; TU GANANCIA DE ESTA BOLETA: <strong style="color:var(--ok)">$${fmt(Math.max(0,bs.abono-comision))}</strong>
+       </div>`:"";
+
+  document.getElementById("ra").innerHTML=`
+<div class="bres">
+  <div class="bhdr" style="background:${bg}">
+    <div class="bnums">
+      <span class="nb ${h1}">${bm.n1}</span><span class="nsep">·</span><span class="nb ${h2}">${bm.n2}</span>
+    </div>
+    <div style="display:flex;gap:7px;flex-wrap:wrap;align-items:center">
+      <span class="ot ${oc}">${ol}</span><span class="sbx ${sc2}">${sl2}</span>
+    </div>
+  </div>
+  <div class="bb">
+    ${ri}
+    <div class="fr">
+      <div class="fg"><label>Nombre del comprador</label>
+        <input id="fn2" type="text" value="${esc(bs.nombre)}" placeholder="Nombre completo" oninput="marcarEdicion()"/></div>
+      <div class="fg"><label>N° CELULAR</label>
+        <input id="ft" type="tel" value="${esc(bs.tel)}" placeholder="3001234567" oninput="marcarEdicion()"/></div>
+    </div>
+    <div class="fr one">
+      <div class="fg"><label>DIRECCIÓN</label>
+        <input id="fd2" type="text" value="${esc(bs.dir)}" placeholder="Calle / Barrio / Ciudad" oninput="marcarEdicion()"/></div>
+    </div>
+    <div style="margin-bottom:11px">
+      <label style="font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:6px">Estado de la boleta</label>
+      <div class="rr">
+        <label><input type="radio" name="est" value="LIBRE" ${bs.estado==="LIBRE"?"checked":""} onchange="marcarEdicion()"> Disponible</label>
+        <label><input type="radio" name="est" value="VENDIDA" ${bs.estado==="VENDIDA"?"checked":""} onchange="marcarEdicion()"> Vendida</label>
+        <label><input type="radio" name="est" value="APARTADA" ${bs.estado==="APARTADA"?"checked":""} onchange="marcarEdicion()"> Apartada / Fiada</label>
+      </div>
+    </div>
+    <div class="ps">
+      <div style="font-size:11px;font-weight:700;color:#4a235a;margin-bottom:9px;text-transform:uppercase;letter-spacing:.5px">💳 Pago</div>
+      <div class="fr tri" style="margin-bottom:9px">
+        <div class="fg"><label>Precio acordado</label>
+          <select id="fp" onchange="marcarEdicion();updS()">
+            <option value="40000" ${bs.precio==40000?"selected":""}>$40.000 normal</option>
+            <option value="35000" ${bs.precio==35000?"selected":""}>$35.000 (3+ boletas)</option>
+          </select></div>
+        <div class="fg"><label>Abono ($)</label>
+          <input id="fa" type="number" value="${bs.abono}" min="0" oninput="marcarEdicion();updS()"/></div>
+        <div class="fg"><label>Saldo pendiente</label>
+          <input id="fs" type="text" value="$${fmt(saldo)}" readonly/></div>
+      </div>
+      <div class="pg">
+        <div class="pc"><div class="pl">Precio</div><div class="pv" id="rpp">$${fmt(bs.precio)}</div></div>
+        <div class="pc"><div class="pl">Abonado</div><div class="pv grn" id="rpa">$${fmt(bs.abono)}</div></div>
+        <div class="pc"><div class="pl">Pendiente</div><div class="pv red" id="rps">$${fmt(saldo)}</div></div>
+      </div>
+    </div>
+    <div class="cb">
+      <div class="cbt">🤝 Vendedor externo — comisión $5.000/boleta</div>
+      <div class="fr" style="margin-top:7px;margin-bottom:0">
+        <div class="fg"><label>¿Tiene vendedor externo?</label>
+          <select id="ftv" onchange="marcarEdicion()">
+            <option value="no" ${!bs.tieneVendedor?"selected":""}>No</option>
+            <option value="si" ${bs.tieneVendedor?"selected":""}>Sí</option>
+          </select></div>
+        <div class="fg"><label>NOMBRE VENDEDOR</label>
+          <input id="fvn" type="text" value="${esc(bs.vendedorNombre)}" placeholder="Nombre del vendedor" oninput="marcarEdicion()"/></div>
+      </div>
+      ${comInfo}
+    </div>
+    <div class="fr">
+      <div class="fg"><label>VENDIDA POR</label>
+        <input id="fr2" type="text" value="${esc(bs.vendidaPor)}" placeholder="Víctor / Pedro" oninput="marcarEdicion()"/></div>
+      <div class="fg"><label>Observaciones</label>
+        <textarea id="fobs" oninput="marcarEdicion()">${esc(bs.notas)}</textarea></div>
+    </div>
+    ${ua}
+    <div class="brow">
+      <button class="btn btn-o" onclick="guardar('${key}')">💾 Guardar en la nube</button>
+      <button class="btn btn-s" onclick="limpiar()">← Volver</button>
+    </div>
+  </div>
+</div>`;
+}
+
+function updS(){
+  const p=parseInt(document.getElementById("fp")?.value)||0;
+  const a=parseInt(document.getElementById("fa")?.value)||0;
+  const s=Math.max(0,p-a);
+  if(document.getElementById("fs")){
+    document.getElementById("fs").value="$"+fmt(s);
+    document.getElementById("rpp").textContent="$"+fmt(p);
+    document.getElementById("rpa").textContent="$"+fmt(a);
+    document.getElementById("rps").textContent="$"+fmt(s);
+  }
+}
+
+async function guardar(key){
+  const datos={
+    estado:document.querySelector("input[name='est']:checked")?.value||"LIBRE",
+    nombre:document.getElementById("fn2").value.trim(),
+    tel:document.getElementById("ft").value.trim(),
+    dir:document.getElementById("fd2").value.trim(),
+    precio:parseInt(document.getElementById("fp").value)||40000,
+    abono:Math.max(0,parseInt(document.getElementById("fa").value)||0),
+    tieneVendedor:document.getElementById("ftv").value==="si",
+    vendedorNombre:document.getElementById("fvn").value.trim(),
+    vendidaPor:document.getElementById("fr2").value.trim(),
+    notas:document.getElementById("fobs").value.trim()
+  };
+  cache[key]={...eb2(),...datos};updHdr();
+  await guardarSrv(key,datos);
+}
+
+// ---- CALCULOS ----
+function calcResumen(arr){
+  const activas=arr.filter(b=>b.estado!=="LIBRE");
+  const recaudado=arr.reduce((s,b)=>s+(b.abono||0),0);
+  const esperado=activas.reduce((s,b)=>s+(b.precio||40000),0);
+  const pendiente=Math.max(0,esperado-recaudado);
+  const comisiones=arr.filter(b=>b.tieneVendedor&&b.estado!=="LIBRE").length*COMISION;
+  const ganancia=Math.max(0,recaudado-comisiones);
+  return{activas:activas.length,libre:arr.filter(b=>b.estado==="LIBRE").length,recaudado,pendiente,comisiones,ganancia};
+}
+
+// ---- RESUMEN ----
+function renderResumen(){
+  const all=Object.values(cache);if(!all.length)return;
+  document.getElementById("st-v").textContent=all.filter(b=>b.estado==="VENDIDA").length;
+  document.getElementById("st-l").textContent=all.filter(b=>b.estado==="LIBRE").length;
+  document.getElementById("st-a").textContent=all.filter(b=>b.estado==="APARTADA").length;
+  const byD=d=>Object.keys(MASTER).filter(k=>MASTER[k].dueno===d).map(k=>cache[k]||eb2());
+  [["rv",byD("VICTOR")],["rp",byD("PEDRO")]].forEach(([id,arr])=>{
+    const c=calcResumen(arr);
+    document.getElementById(id+"-v").textContent=c.activas;
+    document.getElementById(id+"-l").textContent=c.libre;
+    document.getElementById(id+"-r").textContent="$"+fmt(c.recaudado);
+    document.getElementById(id+"-p").textContent="$"+fmt(c.pendiente);
+    document.getElementById(id+"-c").textContent="$"+fmt(c.comisiones);
+    document.getElementById(id+"-g").textContent="$"+fmt(c.ganancia);
+  });
+  const tot=calcResumen(all);
+  document.getElementById("res-r").textContent="$"+fmt(tot.recaudado);
+  document.getElementById("res-p").textContent="$"+fmt(tot.pendiente);
+  document.getElementById("res-c").textContent="$"+fmt(tot.comisiones);
+  document.getElementById("res-g").textContent="$"+fmt(tot.ganancia);
+}
+
+// ---- DASHBOARD ----
+function renderDashboard(){
+  const all=Object.values(cache);if(!all.length)return;
+  const vend=all.filter(b=>b.estado==="VENDIDA").length;
+  const apart=all.filter(b=>b.estado==="APARTADA").length;
+  const libre=all.filter(b=>b.estado==="LIBRE").length;
+  const total=500;
+
+  // Donut
+  const segments=[
+    {label:"Vendidas",val:vend,color:"#1e7e34"},
+    {label:"Apartadas",val:apart,color:"#d4a017"},
+    {label:"Disponibles",val:libre,color:"#dde3ee"}
+  ];
+  let offset=0,r=45,cx=60,cy=60,circ=2*Math.PI*r;
+  let paths="",legends="";
+  segments.forEach(sg=>{
+    const pct=sg.val/total;
+    const dash=pct*circ;
+    const rot=offset*360-90;
+    paths+=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${sg.color}" stroke-width="18"
+      stroke-dasharray="${dash} ${circ}" stroke-dashoffset="0"
+      transform="rotate(${rot} ${cx} ${cy})"/>`;
+    legends+=`<div class="legend-item"><div class="legend-dot" style="background:${sg.color}"></div><span>${sg.label}: <strong>${sg.val}</strong></span></div>`;
+    offset+=pct;
+  });
+  document.getElementById("donut-svg").innerHTML=paths+
+    `<text x="60" y="56" text-anchor="middle" font-size="16" font-weight="700" fill="#1a3a6b">${vend+apart}</text>
+     <text x="60" y="70" text-anchor="middle" font-size="10" fill="#5a6a7a">colocadas</text>`;
+  document.getElementById("donut-legend").innerHTML=legends;
+
+  // KPIs
+  const pctVend=Math.round((vend+apart)/total*100);
+  const recTot=all.reduce((s,b)=>s+(b.abono||0),0);
+  const espTot=all.filter(b=>b.estado!=="LIBRE").reduce((s,b)=>s+(b.precio||40000),0);
+  const pctRec=espTot>0?Math.round(recTot/espTot*100):0;
+  document.getElementById("kpi-row").innerHTML=`
+    <div class="kpi"><div class="kv" style="color:var(--ok)">${pctVend}%</div><div class="kl">Colocadas</div></div>
+    <div class="kpi"><div class="kv" style="color:#b8860b">${pctRec}%</div><div class="kl">Cobrado</div></div>`;
+  document.getElementById("prog-bar").style.width=pctVend+"%";
+  document.getElementById("prog-pct").textContent=pctVend+"%";
+  document.getElementById("prog-bar2").style.width=pctRec+"%";
+  document.getElementById("prog-pct2").textContent=pctRec+"%";
+
+  // Barras Víctor vs Pedro vendidas
+  const byD=d=>Object.keys(MASTER).filter(k=>MASTER[k].dueno===d).map(k=>cache[k]||eb2());
+  const vD=byD("VICTOR"),pD=byD("PEDRO");
+  const vVend=vD.filter(b=>b.estado!=="LIBRE").length;
+  const pVend=pD.filter(b=>b.estado!=="LIBRE").length;
+  const maxVP=Math.max(vVend,pVend,1);
+  document.getElementById("bar-vp").innerHTML=barRow("Víctor",vVend,maxVP,"#1a3a6b")+barRow("Pedro",pVend,maxVP,"#6c3483");
+
+  // Barras recaudo
+  const vRec=vD.reduce((s,b)=>s+(b.abono||0),0);
+  const pRec=pD.reduce((s,b)=>s+(b.abono||0),0);
+  const maxRec=Math.max(vRec,pRec,1);
+  document.getElementById("bar-rec").innerHTML=barRow("Víctor","$"+fmtK(vRec),maxRec,"#1a3a6b",vRec)+barRow("Pedro","$"+fmtK(pRec),maxRec,"#6c3483",pRec);
+
+  // Barras ganancia vs comisiones
+  const vCom=vD.filter(b=>b.tieneVendedor&&b.estado!=="LIBRE").length*COMISION;
+  const pCom=pD.filter(b=>b.tieneVendedor&&b.estado!=="LIBRE").length*COMISION;
+  const vGan=Math.max(0,vRec-vCom),pGan=Math.max(0,pRec-pCom);
+  const maxG=Math.max(vGan,pGan,vCom,pCom,1);
+  document.getElementById("bar-gan").innerHTML=
+    barRow("Gan. Víctor","$"+fmtK(vGan),maxG,"#1e7e34",vGan)+
+    barRow("Gan. Pedro","$"+fmtK(pGan),maxG,"#2e7d32",pGan)+
+    barRow("Com. Víctor","$"+fmtK(vCom),maxG,"#ab47bc",vCom)+
+    barRow("Com. Pedro","$"+fmtK(pCom),maxG,"#8e24aa",pCom);
+
+  // Top vendedores externos
+  const mapa={};
+  all.forEach(b=>{if(!b.tieneVendedor||!b.vendedorNombre||b.estado==="LIBRE")return;
+    const n=b.vendedorNombre.trim();if(!mapa[n])mapa[n]=0;mapa[n]++;});
+  const vends=Object.entries(mapa).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  if(vends.length){
+    const maxV=Math.max(...vends.map(v=>v[1]),1);
+    document.getElementById("bar-vend").innerHTML=vends.map(([n,c])=>barRow(n,c,maxV,"#6c3483")).join("");
+  }else{
+    document.getElementById("bar-vend").innerHTML='<p style="font-size:12px;color:var(--text2)">Sin vendedores externos registrados aún.</p>';
+  }
+
+  // Distribución precios
+  const p40=all.filter(b=>b.precio==40000&&b.estado!=="LIBRE").length;
+  const p35=all.filter(b=>b.precio==35000&&b.estado!=="LIBRE").length;
+  const maxP=Math.max(p40,p35,1);
+  document.getElementById("bar-precios").innerHTML=
+    barRow("$40.000",p40,maxP,"#1a3a6b")+barRow("$35.000",p35,maxP,"#d4a017");
+}
+
+function barRow(lbl,val,max,color,numVal){
+  const n=typeof numVal!=="undefined"?numVal:val;
+  const pct=Math.max(3,Math.round(n/max*100));
+  return`<div class="bar-row">
+    <span class="bar-lbl">${esc(String(lbl))}</span>
+    <div class="bar-outer"><div class="bar-inner" style="width:${pct}%;background:${color}">${val}</div></div>
+  </div>`;
+}
+
+// ---- VENDEDORES ----
+function renderVendedores(){
+  const all=Object.values(cache);
+  const mapa={};
+  all.forEach(b=>{
+    if(!b.tieneVendedor||!b.vendedorNombre||b.estado==="LIBRE")return;
+    const n=b.vendedorNombre.trim();
+    if(!mapa[n])mapa[n]={boletas:0,comision:0};
+    mapa[n].boletas++;mapa[n].comision+=COMISION;
+  });
+  const vends=Object.entries(mapa).sort((a,b)=>b[1].boletas-a[1].boletas);
+  const totB=vends.reduce((s,[,v])=>s+v.boletas,0);
+  const totC=vends.reduce((s,[,v])=>s+v.comision,0);
+  document.getElementById("vc-total").textContent=vends.length||"0";
+  document.getElementById("vc-boletas").textContent=totB;
+  document.getElementById("vc-monto").textContent="$"+fmt(totC);
+  if(!vends.length){
+    document.getElementById("vend-table-wrap").innerHTML='<p style="color:var(--text2);font-size:13px;padding:10px 0">Aún no hay boletas con vendedor externo registradas.</p>';
+    return;
+  }
+  document.getElementById("vend-table-wrap").innerHTML=`
+    <table class="vtable">
+      <thead><tr><th>NOMBRE VENDEDOR</th><th style="text-align:center">BOLETAS</th><th style="text-align:right">COMISIÓN A PAGAR</th></tr></thead>
+      <tbody>${vends.map(([n,v])=>`<tr><td>${esc(n)}</td><td style="text-align:center">${v.boletas}</td><td style="text-align:right;color:var(--pur);font-weight:700">$${fmt(v.comision)}</td></tr>`).join("")}</tbody>
+      <tfoot><tr><td><strong>TOTAL</strong></td><td style="text-align:center"><strong>${totB}</strong></td><td style="text-align:right;color:var(--pur)"><strong>$${fmt(totC)}</strong></td></tr></tfoot>
+    </table>`;
+}
+
+// ---- LISTADO ----
+function renderTabla(){
+  const fn=document.getElementById("fn").value.toLowerCase();
+  const fe=document.getElementById("fe").value;
+  const fd=document.getElementById("fd").value;
+  const rows=[];
+  Object.keys(MASTER).forEach(k=>{
+    const bm=MASTER[k],bs=cache[k]||eb2();
+    if(fe&&bs.estado!==fe)return;
+    if(fd&&bm.dueno!==fd)return;
+    if(fn&&!bs.nombre.toLowerCase().includes(fn))return;
+    rows.push([k,bm,bs]);
+  });
+  rows.sort((a,b)=>{const o={VENDIDA:0,APARTADA:1,LIBRE:2};return(o[a[2].estado]-o[b[2].estado])||a[1].n1.localeCompare(b[1].n1);});
+  const sH={LIBRE:'<span style="color:var(--ok)">✅</span>',VENDIDA:'<span style="color:var(--acc)">🔴</span>',APARTADA:'<span style="color:var(--warn)">🟡</span>'};
+  document.getElementById("tb").innerHTML=rows.slice(0,300).map(([k,bm,bs])=>{
+    const du=bm.dueno==="VICTOR"?'<span style="color:var(--pri);font-weight:600">VÍCTOR</span>':'<span style="color:var(--pur);font-weight:600">PEDRO</span>';
+    const ab=bs.abono>0?"$"+fmt(bs.abono):(bs.estado==="LIBRE"?"—":"$0");
+    return`<tr><td><strong>${bm.n1}</strong></td><td><strong>${bm.n2}</strong></td><td>${du}</td><td>${sH[bs.estado]} ${bs.estado}</td><td>${esc(bs.nombre)||"—"}</td><td>${esc(bs.vendidaPor)||"—"}</td><td>${ab}</td><td><button class="btn btn-p btn-sm" onclick="irA('${bm.n1}')">Ver</button></td></tr>`;
+  }).join("")||'<tr><td colspan="8" style="text-align:center;padding:24px;color:var(--text2)">Sin resultados</td></tr>';
+}
+function filtrar(){renderTabla();}
+function irA(num){
+  document.getElementById("ni").value=num;
+  document.querySelectorAll(".sec").forEach(s=>s.classList.remove("on"));
+  document.querySelectorAll(".tab").forEach(b=>b.classList.remove("on"));
+  document.getElementById("sec-buscar").classList.add("on");
+  document.querySelector(".tab").classList.add("on");
+  buscar();
+}
+
+// ---- HEADER ----
+function updHdr(){
+  const all=Object.values(cache);if(!all.length)return;
+  document.getElementById("hs-v").textContent=all.filter(b=>b.estado!=="LIBRE").length;
+  document.getElementById("hs-l").textContent=all.filter(b=>b.estado==="LIBRE").length;
+  document.getElementById("hs-r").textContent="$"+fmtK(all.reduce((s,b)=>s+(b.abono||0),0));
+}
+
+// ---- UTILS ----
+function eb2(){return{estado:"LIBRE",nombre:"",tel:"",dir:"",precio:40000,abono:0,tieneVendedor:false,vendedorNombre:"",vendidaPor:"",fechaVenta:"",notas:"",ultimaAct:""}}
+function fmt(n){return Math.round(n||0).toLocaleString("es-CO")}
+function fmtK(n){return n>=1000000?(n/1000000).toFixed(1)+"M":n>=1000?Math.round(n/1000)+"K":fmt(n)}
+function esc(s){return(s||"").replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;")}
+function hc(){return new Date().toLocaleTimeString("es-CO",{hour:"2-digit",minute:"2-digit"})}
+function fmtFecha(s){
+  if(!s)return"";
+  if(/^\d{2}\/\d{2}\/\d{4}/.test(s))return s.substring(0,10);
+  try{
+    const d=new Date(s);
+    if(!isNaN(d.getTime())){
+      return String(d.getDate()).padStart(2,"0")+"/"+String(d.getMonth()+1).padStart(2,"0")+"/"+d.getFullYear();
+    }
+  }catch(e){}
+  return s;
+}
+function toast(msg,type){const t=document.getElementById("toast");t.textContent=msg;t.className="toast show "+(type||"");setTimeout(()=>t.classList.remove("show"),3500)}
+function setSt(st,lb){document.getElementById("sd").className="sd "+st;document.getElementById("slb").textContent=lb}
+
+cargar(true);
+setInterval(()=>{if(document.visibilityState==="visible"&&!cargando&&!editando)cargar(false);},30000);
+</script>
+</body>
+</html>
