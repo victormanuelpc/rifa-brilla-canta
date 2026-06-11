@@ -182,30 +182,72 @@ table.lt tr:hover td{background:#f0f4ff}
     <div class="sc" style="background:var(--warn-bg)"><div class="sv" style="color:var(--warn)" id="st-a">—</div><div class="sl2">Apartadas</div></div>
     <div class="sc red"><div class="sv" id="st-l">—</div><div class="sl2">Disponibles</div></div>
   </div>
-  <div class="twin">
-    <div class="card">
-      <div class="ct">🎯 Víctor Manuel</div>
-      <div style="font-size:13px;line-height:2.2">
-        <div>Vendidas/Apart.: <strong id="rv-v">—</strong></div>
-        <div>Disponibles: <strong id="rv-l">—</strong></div>
-        <div>Recaudado: <strong id="rv-r">—</strong></div>
-        <div>Por cobrar: <strong id="rv-p" style="color:var(--acc)">—</strong></div>
-        <div>Comisiones: <strong id="rv-c" style="color:var(--pur)">—</strong></div>
-        <div>💰 Ganancia neta: <strong id="rv-g" style="color:var(--ok)">—</strong></div>
+
+  <!-- Toggle vista -->
+  <div style="display:flex;gap:8px;margin-bottom:14px;align-items:center">
+    <span style="font-size:12px;font-weight:700;color:var(--text2)">VER POR:</span>
+    <button id="btn-vista-paquete" class="btn btn-p btn-sm" onclick="setVista('paquete')">📦 Paquete</button>
+    <button id="btn-vista-vendedor" class="btn btn-s btn-sm" onclick="setVista('vendedor')">🤝 Quién vendió</button>
+  </div>
+
+  <!-- Vista por paquete -->
+  <div id="vista-paquete">
+    <div class="twin">
+      <div class="card">
+        <div class="ct">📦 Paquete Víctor</div>
+        <div style="font-size:12px;color:var(--text2);margin-top:-8px;margin-bottom:8px">Boletas que son de Víctor</div>
+        <div style="font-size:13px;line-height:2.2">
+          <div>Vendidas/Apart.: <strong id="rv-v">—</strong></div>
+          <div>Disponibles: <strong id="rv-l">—</strong></div>
+          <div>Recaudado: <strong id="rv-r">—</strong></div>
+          <div>Por cobrar: <strong id="rv-p" style="color:var(--acc)">—</strong></div>
+          <div>Comisiones: <strong id="rv-c" style="color:var(--pur)">—</strong></div>
+          <div>💰 Ganancia neta: <strong id="rv-g" style="color:var(--ok)">—</strong></div>
+        </div>
       </div>
-    </div>
-    <div class="card">
-      <div class="ct" style="color:var(--pur)">🎯 Pedro Nel</div>
-      <div style="font-size:13px;line-height:2.2">
-        <div>Vendidas/Apart.: <strong id="rp-v">—</strong></div>
-        <div>Disponibles: <strong id="rp-l">—</strong></div>
-        <div>Recaudado: <strong id="rp-r">—</strong></div>
-        <div>Por cobrar: <strong id="rp-p" style="color:var(--acc)">—</strong></div>
-        <div>Comisiones: <strong id="rp-c" style="color:var(--pur)">—</strong></div>
-        <div>💰 Ganancia neta: <strong id="rp-g" style="color:var(--ok)">—</strong></div>
+      <div class="card">
+        <div class="ct" style="color:var(--pur)">📦 Paquete Pedro</div>
+        <div style="font-size:12px;color:var(--text2);margin-top:-8px;margin-bottom:8px">Boletas que son de Pedro</div>
+        <div style="font-size:13px;line-height:2.2">
+          <div>Vendidas/Apart.: <strong id="rp-v">—</strong></div>
+          <div>Disponibles: <strong id="rp-l">—</strong></div>
+          <div>Recaudado: <strong id="rp-r">—</strong></div>
+          <div>Por cobrar: <strong id="rp-p" style="color:var(--acc)">—</strong></div>
+          <div>Comisiones: <strong id="rp-c" style="color:var(--pur)">—</strong></div>
+          <div>💰 Ganancia neta: <strong id="rp-g" style="color:var(--ok)">—</strong></div>
+        </div>
       </div>
     </div>
   </div>
+
+  <!-- Vista por vendedor -->
+  <div id="vista-vendedor" style="display:none">
+    <div class="twin">
+      <div class="card">
+        <div class="ct">🤝 Ventas de Víctor</div>
+        <div style="font-size:12px;color:var(--text2);margin-top:-8px;margin-bottom:8px">Boletas registradas por Víctor</div>
+        <div style="font-size:13px;line-height:2.2">
+          <div>Vendidas/Apart.: <strong id="vv-v">—</strong></div>
+          <div>Recaudado: <strong id="vv-r">—</strong></div>
+          <div>Por cobrar: <strong id="vv-p" style="color:var(--acc)">—</strong></div>
+          <div>Comisiones: <strong id="vv-c" style="color:var(--pur)">—</strong></div>
+          <div>💰 Ganancia neta: <strong id="vv-g" style="color:var(--ok)">—</strong></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ct" style="color:var(--pur)">🤝 Ventas de Pedro</div>
+        <div style="font-size:12px;color:var(--text2);margin-top:-8px;margin-bottom:8px">Boletas registradas por Pedro</div>
+        <div style="font-size:13px;line-height:2.2">
+          <div>Vendidas/Apart.: <strong id="vp-v">—</strong></div>
+          <div>Recaudado: <strong id="vp-r">—</strong></div>
+          <div>Por cobrar: <strong id="vp-p" style="color:var(--acc)">—</strong></div>
+          <div>Comisiones: <strong id="vp-c" style="color:var(--pur)">—</strong></div>
+          <div>💰 Ganancia neta: <strong id="vp-g" style="color:var(--ok)">—</strong></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="card">
     <div class="ct">💰 Balance general consolidado</div>
     <div class="pg4">
@@ -502,7 +544,20 @@ function renderRes(nb,key){
     </div>
     <div class="fr">
       <div class="fg"><label>VENDIDA POR</label>
-        <input id="fr2" type="text" value="${esc(bs.vendidaPor)}" placeholder="Víctor / Pedro" oninput="marcarEdicion()"/></div>
+      <div style="display:flex;gap:8px;margin-top:2px">
+        <button type="button" id="btn-vp-victor"
+          onclick="selVendidaPor('Víctor Manuel Patiño')"
+          style="flex:1;padding:9px 6px;border-radius:7px;border:2px solid var(--border);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;background:${bs.vendidaPor==='Víctor Manuel Patiño'?'var(--pri)':'var(--bg)'};color:${bs.vendidaPor==='Víctor Manuel Patiño'?'#fff':'var(--text)'}">
+          🎯 Víctor Manuel
+        </button>
+        <button type="button" id="btn-vp-pedro"
+          onclick="selVendidaPor('Pedro Nel Delgado')"
+          style="flex:1;padding:9px 6px;border-radius:7px;border:2px solid var(--border);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;background:${bs.vendidaPor==='Pedro Nel Delgado'?'var(--pur)':'var(--bg)'};color:${bs.vendidaPor==='Pedro Nel Delgado'?'#fff':'var(--text)'}">
+          🎯 Pedro Nel
+        </button>
+      </div>
+      <input type="hidden" id="fr2" value="${esc(bs.vendidaPor)}"/>
+    </div>
       <div class="fg"><label>Observaciones</label>
         <textarea id="fobs" oninput="marcarEdicion()">${esc(bs.notas)}</textarea></div>
     </div>
@@ -556,11 +611,22 @@ function calcResumen(arr){
 }
 
 // ---- RESUMEN ----
+let vistaActual="paquete";
+function setVista(v){
+  vistaActual=v;
+  document.getElementById("vista-paquete").style.display=v==="paquete"?"block":"none";
+  document.getElementById("vista-vendedor").style.display=v==="vendedor"?"block":"none";
+  document.getElementById("btn-vista-paquete").className="btn btn-sm "+(v==="paquete"?"btn-p":"btn-s");
+  document.getElementById("btn-vista-vendedor").className="btn btn-sm "+(v==="vendedor"?"btn-p":"btn-s");
+}
+
 function renderResumen(){
   const all=Object.values(cache);if(!all.length)return;
   document.getElementById("st-v").textContent=all.filter(b=>b.estado==="VENDIDA").length;
   document.getElementById("st-l").textContent=all.filter(b=>b.estado==="LIBRE").length;
   document.getElementById("st-a").textContent=all.filter(b=>b.estado==="APARTADA").length;
+
+  // POR PAQUETE (propietario)
   const byD=d=>Object.keys(MASTER).filter(k=>MASTER[k].dueno===d).map(k=>cache[k]||eb2());
   [["rv",byD("VICTOR")],["rp",byD("PEDRO")]].forEach(([id,arr])=>{
     const c=calcResumen(arr);
@@ -571,6 +637,20 @@ function renderResumen(){
     document.getElementById(id+"-c").textContent="$"+fmt(c.comisiones);
     document.getElementById(id+"-g").textContent="$"+fmt(c.ganancia);
   });
+
+  // POR VENDEDOR (quien registró la venta)
+  const byV=nombre=>all.filter(b=>(b.vendidaPor||"").toLowerCase().includes(nombre.toLowerCase()));
+  const vVentas=byV("víctor"), pVentas=byV("pedro");
+  [["vv",vVentas],["vp",pVentas]].forEach(([id,arr])=>{
+    const c=calcResumen(arr);
+    document.getElementById(id+"-v").textContent=c.activas;
+    document.getElementById(id+"-r").textContent="$"+fmt(c.recaudado);
+    document.getElementById(id+"-p").textContent="$"+fmt(c.pendiente);
+    document.getElementById(id+"-c").textContent="$"+fmt(c.comisiones);
+    document.getElementById(id+"-g").textContent="$"+fmt(c.ganancia);
+  });
+
+  // TOTAL GENERAL
   const tot=calcResumen(all);
   document.getElementById("res-r").textContent="$"+fmt(tot.recaudado);
   document.getElementById("res-p").textContent="$"+fmt(tot.pendiente);
@@ -622,23 +702,41 @@ function renderDashboard(){
   document.getElementById("prog-bar2").style.width=pctRec+"%";
   document.getElementById("prog-pct2").textContent=pctRec+"%";
 
-  // Barras Víctor vs Pedro vendidas
+  // Por paquete
   const byD=d=>Object.keys(MASTER).filter(k=>MASTER[k].dueno===d).map(k=>cache[k]||eb2());
   const vD=byD("VICTOR"),pD=byD("PEDRO");
-  const vVend=vD.filter(b=>b.estado!=="LIBRE").length;
-  const pVend=pD.filter(b=>b.estado!=="LIBRE").length;
-  const maxVP=Math.max(vVend,pVend,1);
-  document.getElementById("bar-vp").innerHTML=barRow("Víctor",vVend,maxVP,"#1a3a6b")+barRow("Pedro",pVend,maxVP,"#6c3483");
+  // Por vendedor
+  const byV=n=>all.filter(b=>(b.vendidaPor||"").toLowerCase().includes(n.toLowerCase()));
+  const vVtas=byV("víctor"),pVtas=byV("pedro");
 
-  // Barras recaudo
-  const vRec=vD.reduce((s,b)=>s+(b.abono||0),0);
-  const pRec=pD.reduce((s,b)=>s+(b.abono||0),0);
-  const maxRec=Math.max(vRec,pRec,1);
-  document.getElementById("bar-rec").innerHTML=barRow("Víctor","$"+fmtK(vRec),maxRec,"#1a3a6b",vRec)+barRow("Pedro","$"+fmtK(pRec),maxRec,"#6c3483",pRec);
+  // Barras vendidas: paquete vs vendedor
+  const vVendPaq=vD.filter(b=>b.estado!=="LIBRE").length;
+  const pVendPaq=pD.filter(b=>b.estado!=="LIBRE").length;
+  const vVendVta=vVtas.filter(b=>b.estado!=="LIBRE").length;
+  const pVendVta=pVtas.filter(b=>b.estado!=="LIBRE").length;
+  const maxVP=Math.max(vVendPaq,pVendPaq,vVendVta,pVendVta,1);
+  document.getElementById("bar-vp").innerHTML=
+    barRow("Víctor (paquete)",vVendPaq,maxVP,"#1a3a6b")+
+    barRow("Pedro (paquete)",pVendPaq,maxVP,"#6c3483")+
+    barRow("Víctor (vendió)",vVendVta,maxVP,"#2196F3")+
+    barRow("Pedro (vendió)",pVendVta,maxVP,"#9c27b0");
 
-  // Barras ganancia vs comisiones
+  // Barras recaudo: paquete vs vendedor
+  const vRecPaq=vD.reduce((s,b)=>s+(b.abono||0),0);
+  const pRecPaq=pD.reduce((s,b)=>s+(b.abono||0),0);
+  const vRecVta=vVtas.reduce((s,b)=>s+(b.abono||0),0);
+  const pRecVta=pVtas.reduce((s,b)=>s+(b.abono||0),0);
+  const maxRec=Math.max(vRecPaq,pRecPaq,vRecVta,pRecVta,1);
+  document.getElementById("bar-rec").innerHTML=
+    barRow("Víctor (paquete)","$"+fmtK(vRecPaq),maxRec,"#1a3a6b",vRecPaq)+
+    barRow("Pedro (paquete)","$"+fmtK(pRecPaq),maxRec,"#6c3483",pRecPaq)+
+    barRow("Víctor (vendió)","$"+fmtK(vRecVta),maxRec,"#2196F3",vRecVta)+
+    barRow("Pedro (vendió)","$"+fmtK(pRecVta),maxRec,"#9c27b0",pRecVta);
+
+  // Barras ganancia vs comisiones (por paquete)
   const vCom=vD.filter(b=>b.tieneVendedor&&b.estado!=="LIBRE").length*COMISION;
   const pCom=pD.filter(b=>b.tieneVendedor&&b.estado!=="LIBRE").length*COMISION;
+  const vRec=vRecPaq, pRec=pRecPaq;
   const vGan=Math.max(0,vRec-vCom),pGan=Math.max(0,pRec-pCom);
   const maxG=Math.max(vGan,pGan,vCom,pCom,1);
   document.getElementById("bar-gan").innerHTML=
@@ -736,6 +834,24 @@ function irA(num){
 }
 
 // ---- HEADER ----
+function selVendidaPor(nombre){
+  marcarEdicion();
+  document.getElementById("fr2").value=nombre;
+  const esVictor=nombre.includes("Víctor");
+  const bv=document.getElementById("btn-vp-victor");
+  const bp=document.getElementById("btn-vp-pedro");
+  if(bv){
+    bv.style.background=esVictor?"var(--pri)":"var(--bg)";
+    bv.style.color=esVictor?"#fff":"var(--text)";
+    bv.style.borderColor=esVictor?"var(--pri)":"var(--border)";
+  }
+  if(bp){
+    bp.style.background=!esVictor?"var(--pur)":"var(--bg)";
+    bp.style.color=!esVictor?"#fff":"var(--text)";
+    bp.style.borderColor=!esVictor?"var(--pur)":"var(--border)";
+  }
+}
+
 function updHdr(){
   const all=Object.values(cache);if(!all.length)return;
   document.getElementById("hs-v").textContent=all.filter(b=>b.estado!=="LIBRE").length;
