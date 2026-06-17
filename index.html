@@ -124,6 +124,10 @@ table.lt tr:hover td{background:#f0f4ff}
 .edit-banner.show{display:block}
 .eb{background:#fff3cd;border:1.5px solid #ffe082;border-radius:var(--r);padding:14px;font-size:13px;color:#5d4037;margin-bottom:14px;display:none}
 .eb.show{display:block}
+.sug-item{padding:10px 14px;cursor:pointer;font-size:13px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.sug-item:hover,.sug-item.active{background:#f0f4ff}
+.sug-num{font-size:11px;color:var(--text2);font-family:monospace}
+.sug-highlight{color:var(--pri);font-weight:700}
 @media(max-width:600px){
   .fr{grid-template-columns:1fr}.fr.tri{grid-template-columns:1fr 1fr}
   .pg{grid-template-columns:1fr 1fr}.pg4{grid-template-columns:1fr 1fr}
@@ -170,6 +174,16 @@ table.lt tr:hover td{background:#f0f4ff}
       <button class="btn bc" onclick="limpiar()">✕</button>
     </div>
     <p style="font-size:11px;color:var(--text2)">Escribe los 3 dígitos y presiona Enter.</p>
+    <hr style="margin:14px 0;border:none;border-top:1px solid var(--border)"/>
+    <div class="ct" style="margin-bottom:8px">Buscar por nombre del comprador</div>
+    <div style="position:relative">
+      <input type="text" id="busca-nombre" placeholder="Ej: Doris, William, María..."
+        style="width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--r);font-size:14px;outline:none;font-family:inherit"
+        oninput="buscarPorNombre(this.value)"
+        onkeydown="navSugerencias(event)"
+        autocomplete="off"/>
+      <div id="sugerencias" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1.5px solid var(--pri);border-top:none;border-radius:0 0 var(--r) var(--r);max-height:220px;overflow-y:auto;z-index:200;box-shadow:var(--sh)"></div>
+    </div>
   </div>
   <div id="ra"></div>
 </div>
@@ -195,9 +209,11 @@ table.lt tr:hover td{background:#f0f4ff}
     <div class="twin">
       <div class="card">
         <div class="ct">📦 Paquete Víctor</div>
-        <div style="font-size:12px;color:var(--text2);margin-top:-8px;margin-bottom:8px">Boletas que son de Víctor</div>
-        <div style="font-size:13px;line-height:2.2">
-          <div>Vendidas/Apart.: <strong id="rv-v">—</strong></div>
+        <div style="font-size:12px;color:var(--text2);margin-top:-8px;margin-bottom:8px">Boletas que pertenecen al paquete de Víctor</div>
+        <div style="font-size:13px;line-height:2.1">
+          <div>Total vendidas/apart.: <strong id="rv-v">—</strong></div>
+          <div style="padding-left:12px;font-size:12px">↳ vendidas por Víctor: <strong id="rv-vv">—</strong></div>
+          <div style="padding-left:12px;font-size:12px">↳ vendidas por Pedro: <strong id="rv-vp">—</strong></div>
           <div>Disponibles: <strong id="rv-l">—</strong></div>
           <div>Recaudado: <strong id="rv-r">—</strong></div>
           <div>Por cobrar: <strong id="rv-p" style="color:var(--acc)">—</strong></div>
@@ -207,9 +223,11 @@ table.lt tr:hover td{background:#f0f4ff}
       </div>
       <div class="card">
         <div class="ct" style="color:var(--pur)">📦 Paquete Pedro</div>
-        <div style="font-size:12px;color:var(--text2);margin-top:-8px;margin-bottom:8px">Boletas que son de Pedro</div>
-        <div style="font-size:13px;line-height:2.2">
-          <div>Vendidas/Apart.: <strong id="rp-v">—</strong></div>
+        <div style="font-size:12px;color:var(--text2);margin-top:-8px;margin-bottom:8px">Boletas que pertenecen al paquete de Pedro</div>
+        <div style="font-size:13px;line-height:2.1">
+          <div>Total vendidas/apart.: <strong id="rp-v">—</strong></div>
+          <div style="padding-left:12px;font-size:12px">↳ vendidas por Pedro: <strong id="rp-vp">—</strong></div>
+          <div style="padding-left:12px;font-size:12px">↳ vendidas por Víctor: <strong id="rp-vv">—</strong></div>
           <div>Disponibles: <strong id="rp-l">—</strong></div>
           <div>Recaudado: <strong id="rp-r">—</strong></div>
           <div>Por cobrar: <strong id="rp-p" style="color:var(--acc)">—</strong></div>
@@ -225,9 +243,11 @@ table.lt tr:hover td{background:#f0f4ff}
     <div class="twin">
       <div class="card">
         <div class="ct">🤝 Ventas de Víctor</div>
-        <div style="font-size:12px;color:var(--text2);margin-top:-8px;margin-bottom:8px">Boletas registradas por Víctor</div>
-        <div style="font-size:13px;line-height:2.2">
-          <div>Vendidas/Apart.: <strong id="vv-v">—</strong></div>
+        <div style="font-size:12px;color:var(--text2);margin-top:-8px;margin-bottom:8px">Boletas registradas por Víctor Manuel</div>
+        <div style="font-size:13px;line-height:2.1">
+          <div>Total vendidas/apart.: <strong id="vv-v">—</strong></div>
+          <div style="padding-left:12px;font-size:12px">↳ de su paquete: <strong id="vv-prop">—</strong></div>
+          <div style="padding-left:12px;font-size:12px">↳ del paquete de Pedro: <strong id="vv-otro">—</strong></div>
           <div>Recaudado: <strong id="vv-r">—</strong></div>
           <div>Por cobrar: <strong id="vv-p" style="color:var(--acc)">—</strong></div>
           <div>Comisiones: <strong id="vv-c" style="color:var(--pur)">—</strong></div>
@@ -236,9 +256,11 @@ table.lt tr:hover td{background:#f0f4ff}
       </div>
       <div class="card">
         <div class="ct" style="color:var(--pur)">🤝 Ventas de Pedro</div>
-        <div style="font-size:12px;color:var(--text2);margin-top:-8px;margin-bottom:8px">Boletas registradas por Pedro</div>
-        <div style="font-size:13px;line-height:2.2">
-          <div>Vendidas/Apart.: <strong id="vp-v">—</strong></div>
+        <div style="font-size:12px;color:var(--text2);margin-top:-8px;margin-bottom:8px">Boletas registradas por Pedro Nel</div>
+        <div style="font-size:13px;line-height:2.1">
+          <div>Total vendidas/apart.: <strong id="vp-v">—</strong></div>
+          <div style="padding-left:12px;font-size:12px">↳ de su paquete: <strong id="vp-prop">—</strong></div>
+          <div style="padding-left:12px;font-size:12px">↳ del paquete de Víctor: <strong id="vp-otro">—</strong></div>
           <div>Recaudado: <strong id="vp-r">—</strong></div>
           <div>Por cobrar: <strong id="vp-p" style="color:var(--acc)">—</strong></div>
           <div>Comisiones: <strong id="vp-c" style="color:var(--pur)">—</strong></div>
@@ -451,6 +473,74 @@ function showTab(id,btn){
   if(id==="vendedores")renderVendedores();
 }
 
+// ---- BUSQUEDA POR NOMBRE ----
+function normalizar(s){
+  return(s||"").toLowerCase()
+    .normalize("NFD").replace(/[̀-ͯ]/g,"") // quita tildes
+    .replace(/[sz]/g,"s")  // z y s equivalentes
+    .replace(/[ck]/g,"k")  // c y k equivalentes
+    .trim();
+}
+
+function buscarPorNombre(q){
+  const box=document.getElementById("sugerencias");
+  if(!q||q.length<2){box.style.display="none";return;}
+  const qn=normalizar(q);
+  const resultados=[];
+  Object.keys(cache).forEach(k=>{
+    const b=cache[k];
+    if(b.estado==="LIBRE"||!b.nombre)return;
+    if(normalizar(b.nombre).includes(qn)){
+      const bm=MASTER[k];
+      resultados.push({k,nombre:b.nombre,n1:bm.n1,n2:bm.n2,estado:b.estado,vendidaPor:b.vendidaPor});
+    }
+  });
+  if(!resultados.length){
+    box.innerHTML=`<div class="sug-item" style="color:var(--text2)">Sin resultados para "${q}"</div>`;
+    box.style.display="block";return;
+  }
+  // Highlight matching text
+  const re=new RegExp("("+q.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+")","gi");
+  box.innerHTML=resultados.slice(0,12).map((r,i)=>{
+    const stIcon={VENDIDA:"🔴",APARTADA:"🟡",LIBRE:"✅"}[r.estado]||"";
+    const nameHtml=r.nombre.replace(re,`<span class="sug-highlight">$1</span>`);
+    return`<div class="sug-item" data-idx="${i}" onclick="seleccionarSugerencia('${r.n1}')">
+      <span>${stIcon} ${nameHtml}</span>
+      <span class="sug-num">${r.n1}·${r.n2}</span>
+    </div>`;
+  }).join("");
+  box.style.display="block";
+  sugerenciasData=resultados;
+  sugerenciaActiva=-1;
+}
+
+let sugerenciasData=[], sugerenciaActiva=-1;
+
+function navSugerencias(e){
+  const items=document.querySelectorAll(".sug-item[data-idx]");
+  if(!items.length)return;
+  if(e.key==="ArrowDown"){e.preventDefault();sugerenciaActiva=Math.min(sugerenciaActiva+1,items.length-1);}
+  else if(e.key==="ArrowUp"){e.preventDefault();sugerenciaActiva=Math.max(sugerenciaActiva-1,0);}
+  else if(e.key==="Enter"&&sugerenciaActiva>=0){e.preventDefault();seleccionarSugerencia(sugerenciasData[sugerenciaActiva].n1);return;}
+  else if(e.key==="Escape"){document.getElementById("sugerencias").style.display="none";return;}
+  items.forEach((el,i)=>el.classList.toggle("active",i===sugerenciaActiva));
+}
+
+function seleccionarSugerencia(num){
+  document.getElementById("sugerencias").style.display="none";
+  document.getElementById("busca-nombre").value="";
+  document.getElementById("ni").value=num;
+  buscar();
+}
+
+// Cerrar sugerencias al hacer clic fuera
+document.addEventListener("click",e=>{
+  if(!e.target.closest("#busca-nombre")&&!e.target.closest("#sugerencias")){
+    const box=document.getElementById("sugerencias");
+    if(box)box.style.display="none";
+  }
+});
+
 function buscar(){
   const raw=document.getElementById("ni").value.trim();
   if(!raw){toast("Escribe un número","err2");return;}
@@ -626,29 +716,68 @@ function renderResumen(){
   document.getElementById("st-l").textContent=all.filter(b=>b.estado==="LIBRE").length;
   document.getElementById("st-a").textContent=all.filter(b=>b.estado==="APARTADA").length;
 
-  // POR PAQUETE (propietario)
-  const byD=d=>Object.keys(MASTER).filter(k=>MASTER[k].dueno===d).map(k=>cache[k]||eb2());
-  [["rv",byD("VICTOR")],["rp",byD("PEDRO")]].forEach(([id,arr])=>{
-    const c=calcResumen(arr);
-    document.getElementById(id+"-v").textContent=c.activas;
-    document.getElementById(id+"-l").textContent=c.libre;
-    document.getElementById(id+"-r").textContent="$"+fmt(c.recaudado);
-    document.getElementById(id+"-p").textContent="$"+fmt(c.pendiente);
-    document.getElementById(id+"-c").textContent="$"+fmt(c.comisiones);
-    document.getElementById(id+"-g").textContent="$"+fmt(c.ganancia);
-  });
+  const isV=b=>(b.vendidaPor||"").toLowerCase().includes("víctor")||(b.vendidaPor||"").toLowerCase().includes("victor");
+  const isP=b=>(b.vendidaPor||"").toLowerCase().includes("pedro");
 
-  // POR VENDEDOR (quien registró la venta)
-  const byV=nombre=>all.filter(b=>(b.vendidaPor||"").toLowerCase().includes(nombre.toLowerCase()));
-  const vVentas=byV("víctor"), pVentas=byV("pedro");
-  [["vv",vVentas],["vp",pVentas]].forEach(([id,arr])=>{
-    const c=calcResumen(arr);
-    document.getElementById(id+"-v").textContent=c.activas;
-    document.getElementById(id+"-r").textContent="$"+fmt(c.recaudado);
-    document.getElementById(id+"-p").textContent="$"+fmt(c.pendiente);
-    document.getElementById(id+"-c").textContent="$"+fmt(c.comisiones);
-    document.getElementById(id+"-g").textContent="$"+fmt(c.ganancia);
-  });
+  // POR PAQUETE con desglose de quién vendió
+  const byD=d=>Object.keys(MASTER).filter(k=>MASTER[k].dueno===d).map(k=>cache[k]||eb2());
+  const vPaq=byD("VICTOR"), pPaq=byD("PEDRO");
+
+  // Paquete Víctor
+  const cvP=calcResumen(vPaq);
+  const vPaqVendV=vPaq.filter(b=>b.estado!=="LIBRE"&&isV(b)).length;
+  const vPaqVendP=vPaq.filter(b=>b.estado!=="LIBRE"&&isP(b)).length;
+  document.getElementById("rv-v").textContent=cvP.activas;
+  document.getElementById("rv-vv").textContent=vPaqVendV;
+  document.getElementById("rv-vp").textContent=vPaqVendP;
+  document.getElementById("rv-l").textContent=cvP.libre;
+  document.getElementById("rv-r").textContent="$"+fmt(cvP.recaudado);
+  document.getElementById("rv-p").textContent="$"+fmt(cvP.pendiente);
+  document.getElementById("rv-c").textContent="$"+fmt(cvP.comisiones);
+  document.getElementById("rv-g").textContent="$"+fmt(cvP.ganancia);
+
+  // Paquete Pedro
+  const cpP=calcResumen(pPaq);
+  const pPaqVendP=pPaq.filter(b=>b.estado!=="LIBRE"&&isP(b)).length;
+  const pPaqVendV=pPaq.filter(b=>b.estado!=="LIBRE"&&isV(b)).length;
+  document.getElementById("rp-v").textContent=cpP.activas;
+  document.getElementById("rp-vp").textContent=pPaqVendP;
+  document.getElementById("rp-vv").textContent=pPaqVendV;
+  document.getElementById("rp-l").textContent=cpP.libre;
+  document.getElementById("rp-r").textContent="$"+fmt(cpP.recaudado);
+  document.getElementById("rp-p").textContent="$"+fmt(cpP.pendiente);
+  document.getElementById("rp-c").textContent="$"+fmt(cpP.comisiones);
+  document.getElementById("rp-g").textContent="$"+fmt(cpP.ganancia);
+
+  // POR VENDEDOR con desglose de qué paquete
+  const vVentas=all.filter(b=>b.estado!=="LIBRE"&&isV(b));
+  const pVentas=all.filter(b=>b.estado!=="LIBRE"&&isP(b));
+
+  // Ventas Víctor
+  const cvV=calcResumen(vVentas);
+  const vVendProp=vVentas.filter(b=>MASTER[Object.keys(MASTER).find(k=>cache[k]===b)||""]?.dueno==="VICTOR").length;
+  // Simpler: check via cache key
+  const vVendPropN=Object.keys(cache).filter(k=>MASTER[k]?.dueno==="VICTOR"&&cache[k]?.estado!=="LIBRE"&&isV(cache[k])).length;
+  const vVendOtroN=Object.keys(cache).filter(k=>MASTER[k]?.dueno==="PEDRO"&&cache[k]?.estado!=="LIBRE"&&isV(cache[k])).length;
+  document.getElementById("vv-v").textContent=cvV.activas;
+  document.getElementById("vv-prop").textContent=vVendPropN;
+  document.getElementById("vv-otro").textContent=vVendOtroN;
+  document.getElementById("vv-r").textContent="$"+fmt(cvV.recaudado);
+  document.getElementById("vv-p").textContent="$"+fmt(cvV.pendiente);
+  document.getElementById("vv-c").textContent="$"+fmt(cvV.comisiones);
+  document.getElementById("vv-g").textContent="$"+fmt(cvV.ganancia);
+
+  // Ventas Pedro
+  const cpV=calcResumen(pVentas);
+  const pVendPropN=Object.keys(cache).filter(k=>MASTER[k]?.dueno==="PEDRO"&&cache[k]?.estado!=="LIBRE"&&isP(cache[k])).length;
+  const pVendOtroN=Object.keys(cache).filter(k=>MASTER[k]?.dueno==="VICTOR"&&cache[k]?.estado!=="LIBRE"&&isP(cache[k])).length;
+  document.getElementById("vp-v").textContent=cpV.activas;
+  document.getElementById("vp-prop").textContent=pVendPropN;
+  document.getElementById("vp-otro").textContent=pVendOtroN;
+  document.getElementById("vp-r").textContent="$"+fmt(cpV.recaudado);
+  document.getElementById("vp-p").textContent="$"+fmt(cpV.pendiente);
+  document.getElementById("vp-c").textContent="$"+fmt(cpV.comisiones);
+  document.getElementById("vp-g").textContent="$"+fmt(cpV.ganancia);
 
   // TOTAL GENERAL
   const tot=calcResumen(all);
