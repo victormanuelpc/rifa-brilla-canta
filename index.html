@@ -165,11 +165,17 @@ table.lt tr:hover td{background:#f0f4ff}
     </div>
 
     <div id="login-vendedor" style="display:none">
-      <p style="font-size:13px;color:var(--text2);margin-bottom:10px;text-align:left">Escribe tu nombre completo (se recordará en este dispositivo):</p>
-      <input type="text" id="vendedor-nombre-input" placeholder="Tu nombre completo" style="width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;margin-bottom:10px"
+      <p style="font-size:13px;color:var(--text2);margin-bottom:10px;text-align:left">Selecciona tu nombre de la lista:</p>
+      <select id="vendedor-nombre-select" style="width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;margin-bottom:10px">
+        <option value="">— Cargando vendedores… —</option>
+      </select>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:10px;text-align:left">Escribe los últimos 4 dígitos de tu documento:</p>
+      <input type="text" id="vendedor-clave-input" placeholder="Ej: 1234" maxlength="4" inputmode="numeric"
+        style="width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;margin-bottom:10px;letter-spacing:4px;text-align:center"
         onkeyup="if(event.key==='Enter')validarVendedor()"/>
       <button class="btn btn-ok" style="width:100%;padding:12px;margin-bottom:8px" onclick="validarVendedor()">Entrar</button>
       <button class="btn btn-s" style="width:100%;padding:10px;font-size:13px" onclick="volverChoice()">← Volver</button>
+      <p id="vendedor-error" style="color:var(--acc);font-size:12px;margin-top:8px;display:none">Código incorrecto. Verifica los últimos 4 dígitos de tu documento.</p>
     </div>
   </div>
 </div>
@@ -503,16 +509,37 @@ function mostrarLoginAdmin(){
   document.getElementById("login-admin").style.display="block";
   document.getElementById("admin-pass").focus();
 }
-function mostrarLoginVendedor(){
+async function mostrarLoginVendedor(){
   document.getElementById("login-choice").style.display="none";
   document.getElementById("login-vendedor").style.display="block";
-  document.getElementById("vendedor-nombre-input").focus();
+  const sel=document.getElementById("vendedor-nombre-select");
+  sel.innerHTML='<option value="">— Cargando vendedores… —</option>';
+  try{
+    const r=await fetch(API+"?action=getAllData",{redirect:"follow"});
+    const d=await r.json();
+    if(d.ok&&d.vendedores){
+      vendedoresCache=d.vendedores;
+      const arr=Object.values(d.vendedores).sort((a,b)=>a.nombre.localeCompare(b.nombre));
+      if(arr.length){
+        sel.innerHTML='<option value="">— Selecciona tu nombre —</option>'+
+          arr.map(v=>`<option value="${esc(v.nombre)}">${esc(v.nombre)}</option>`).join("");
+      }else{
+        sel.innerHTML='<option value="">No hay vendedores registrados aún</option>';
+      }
+    }else{
+      sel.innerHTML='<option value="">Error al cargar — intenta de nuevo</option>';
+    }
+  }catch(e){
+    sel.innerHTML='<option value="">Sin conexión — intenta de nuevo</option>';
+  }
+  document.getElementById("vendedor-clave-input").focus();
 }
 function volverChoice(){
   document.getElementById("login-admin").style.display="none";
   document.getElementById("login-vendedor").style.display="none";
   document.getElementById("login-choice").style.display="block";
   document.getElementById("admin-error").style.display="none";
+  document.getElementById("vendedor-error").style.display="none";
 }
 
 function validarAdmin(){
@@ -526,8 +553,20 @@ function validarAdmin(){
 }
 
 function validarVendedor(){
-  const nombre=document.getElementById("vendedor-nombre-input").value.trim();
-  if(!nombre){toast("Escribe tu nombre","err2");return;}
+  const nombre=document.getElementById("vendedor-nombre-select").value;
+  const clave=document.getElementById("vendedor-clave-input").value.trim();
+  document.getElementById("vendedor-error").style.display="none";
+  if(!nombre){toast("Selecciona tu nombre de la lista","err2");return;}
+  if(!clave||clave.length<4){toast("Escribe los 4 dígitos de tu documento","err2");return;}
+  // Buscar el vendedor en cache y comparar últimos 4 dígitos de su documento
+  const vend=Object.values(vendedoresCache).find(v=>v.nombre===nombre);
+  if(!vend){toast("Vendedor no encontrado, recarga e intenta de nuevo","err2");return;}
+  const docLimpio=(vend.doc||"").replace(/\\D/g,"");
+  const ultimos4=docLimpio.slice(-4);
+  if(clave!==ultimos4){
+    document.getElementById("vendedor-error").style.display="block";
+    return;
+  }
   localStorage.setItem("rifa_role","vendedor");
   localStorage.setItem("rifa_vendedor_nombre",nombre);
   entrarComo("vendedor",nombre);
