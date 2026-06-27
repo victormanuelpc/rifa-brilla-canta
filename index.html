@@ -385,6 +385,53 @@ table.lt tr:hover td{background:#f0f4ff}
 <!-- VENDEDORES -->
 <div id="sec-vendedores" class="sec">
   <div class="card">
+    <div class="ct">➕ Registrar nuevo vendedor</div>
+    <div class="fr">
+      <div class="fg"><label>Nombre completo</label>
+        <input id="vf-nombre" type="text" placeholder="Nombre y apellidos"/></div>
+      <div class="fg"><label>Teléfono</label>
+        <input id="vf-tel" type="tel" placeholder="3001234567"/></div>
+    </div>
+    <div class="fr tri">
+      <div class="fg"><label>Tipo de documento</label>
+        <select id="vf-tipodoc">
+          <option value="TI">Tarjeta de Identidad (TI)</option>
+          <option value="CC">Cédula de Ciudadanía (CC)</option>
+        </select></div>
+      <div class="fg"><label>Número de documento</label>
+        <input id="vf-doc" type="text" placeholder="Número"/></div>
+      <div class="fg"><label>Paquete al que pertenece</label>
+        <select id="vf-paquete">
+          <option value="VICTOR">Víctor</option>
+          <option value="PEDRO">Pedro</option>
+        </select></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><label>Permiso de venta</label>
+        <select id="vf-permiso">
+          <option value="CUALQUIERA">Puede vender cualquier boleta disponible</option>
+          <option value="ASIGNADAS">Solo sus boletas asignadas</option>
+        </select></div>
+      <div class="fg"><label>Boletas asignadas (opcional)</label>
+        <input id="vf-asignadas" type="text" placeholder="Ej: 357,358,012 (separados por coma)"/></div>
+    </div>
+    <div class="brow">
+      <button class="btn btn-ok" onclick="guardarVendedorReg()">💾 Guardar vendedor</button>
+      <button class="btn btn-s" onclick="limpiarFormVendedor()">✕ Limpiar</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct">📋 Vendedores registrados</div>
+    <div class="fi" style="margin-bottom:10px">
+      <input type="text" id="vbuscar" placeholder="🔍 Buscar vendedor por nombre…" oninput="renderListaVendedores()"/>
+    </div>
+    <div id="lista-vendedores-wrap"><p style="color:var(--text2);font-size:13px">Cargando…</p></div>
+  </div>
+
+  <div id="detalle-vendedor-wrap"></div>
+
+  <div class="card">
     <div class="ct">🤝 Comisiones por vendedor externo</div>
     <p style="font-size:12px;color:var(--text2);margin-bottom:12px">Cada vendedor externo gana $5.000 por boleta. Aquí el detalle de lo que se les debe.</p>
     <div id="vend-table-wrap"><p style="color:var(--text2);font-size:13px">Cargando…</p></div>
@@ -446,6 +493,8 @@ const COMISION=5000;
 const ADMIN_PASSWORD="BrillaCanta2026"; // Cambia esta contraseña si lo necesitas
 
 let cache={},currentKey=null,cargando=false,editando=false,timerEd=null;
+let vendedoresCache={}; // clave -> {nombre,tel,tipoDoc,doc,paquete,permiso,asignadas}
+let vendedorEditandoKey=null;
 let userRole=null, vendedorActivo=null;
 
 // ============ AUTENTICACIÓN ============
@@ -556,6 +605,7 @@ async function cargar(mostrarError){
         notas:row.notas||"",ultimaAct:row.ultimaActualizacion||""
       }:eb2();
     });
+    vendedoresCache=d.vendedores||{};
     setSt("ok","Sincronizado "+hc());
     updHdr();
     if(currentKey&&!editando)renderRes(document.getElementById("ni").value.padStart(3,"0"),currentKey);
@@ -583,6 +633,180 @@ async function guardarSrv(key,datos){
   }
 }
 
+// ============ VENDEDORES (CRUD) ============
+function listaVendedoresOptions(seleccionado){
+  const arr=Object.values(vendedoresCache).sort((a,b)=>a.nombre.localeCompare(b.nombre));
+  if(!arr.length) return '<option value="" disabled>Sin vendedores registrados aún</option>';
+  return arr.map(v=>`<option value="${esc(v.nombre)}" ${v.nombre===seleccionado?"selected":""}>${esc(v.nombre)} (${v.paquete==="VICTOR"?"Víctor":"Pedro"})</option>`).join("");
+}
+
+function limpiarFormVendedor(){
+  document.getElementById("vf-nombre").value="";
+  document.getElementById("vf-tel").value="";
+  document.getElementById("vf-tipodoc").value="TI";
+  document.getElementById("vf-doc").value="";
+  document.getElementById("vf-paquete").value="VICTOR";
+  document.getElementById("vf-permiso").value="CUALQUIERA";
+  document.getElementById("vf-asignadas").value="";
+  vendedorEditandoKey=null;
+}
+
+async function guardarVendedorReg(){
+  const nombre=document.getElementById("vf-nombre").value.trim();
+  if(!nombre){toast("Escribe el nombre del vendedor","err2");return;}
+  const datos={
+    nombre,
+    tel:document.getElementById("vf-tel").value.trim(),
+    tipoDoc:document.getElementById("vf-tipodoc").value,
+    doc:document.getElementById("vf-doc").value.trim(),
+    paquete:document.getElementById("vf-paquete").value,
+    permiso:document.getElementById("vf-permiso").value,
+    asignadas:document.getElementById("vf-asignadas").value.trim()
+  };
+  setSt("spin","Guardando vendedor…");
+  try{
+    const body={action:"saveVendedor",...datos};
+    if(vendedorEditandoKey) body.clave=vendedorEditandoKey;
+    const r=await fetch(API,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},
+      body:JSON.stringify(body),redirect:"follow"});
+    const d=await r.json();
+    if(!d.ok)throw new Error(d.error||"Error al guardar vendedor");
+    setSt("ok","Guardado "+hc());
+    toast("✅ Vendedor guardado","ok2");
+    limpiarFormVendedor();
+    await cargar(false);
+    renderListaVendedores();
+  }catch(e){
+    setSt("err","Error");
+    toast("❌ "+e.message,"err2");
+  }
+}
+
+function editarVendedor(clave){
+  const v=vendedoresCache[clave];
+  if(!v)return;
+  vendedorEditandoKey=clave;
+  document.getElementById("vf-nombre").value=v.nombre||"";
+  document.getElementById("vf-tel").value=v.tel||"";
+  document.getElementById("vf-tipodoc").value=v.tipoDoc||"TI";
+  document.getElementById("vf-doc").value=v.doc||"";
+  document.getElementById("vf-paquete").value=v.paquete||"VICTOR";
+  document.getElementById("vf-permiso").value=v.permiso||"CUALQUIERA";
+  document.getElementById("vf-asignadas").value=v.asignadas||"";
+  document.getElementById("vf-nombre").scrollIntoView({behavior:"smooth",block:"center"});
+  toast("Editando a "+v.nombre+" — guarda para actualizar","");
+}
+
+async function eliminarVendedor(clave){
+  const v=vendedoresCache[clave];
+  if(!v)return;
+  if(!confirm("¿Eliminar al vendedor "+v.nombre+"? Esto no afecta las boletas ya vendidas, solo el registro del vendedor."))return;
+  setSt("spin","Eliminando…");
+  try{
+    const r=await fetch(API,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},
+      body:JSON.stringify({action:"deleteVendedor",clave}),redirect:"follow"});
+    const d=await r.json();
+    if(!d.ok)throw new Error(d.error||"Error al eliminar");
+    toast("✅ Vendedor eliminado","ok2");
+    await cargar(false);
+    renderListaVendedores();
+  }catch(e){
+    toast("❌ "+e.message,"err2");
+  }
+}
+
+function calcVentasVendedor(nombreVendedor){
+  const nn=normalizar(nombreVendedor);
+  const boletas=Object.keys(MASTER).filter(k=>{
+    const bs=cache[k];
+    return bs&&bs.estado!=="LIBRE"&&bs.tieneVendedor&&normalizar(bs.vendedorNombre)===nn;
+  });
+  const vendidas=boletas.length;
+  const recaudado=boletas.reduce((s,k)=>s+(cache[k].abono||0),0);
+  const esperado=boletas.reduce((s,k)=>s+(cache[k].precio||40000),0);
+  const pendiente=Math.max(0,esperado-recaudado);
+  const comision=vendidas*COMISION;
+  return{vendidas,recaudado,pendiente,comision,boletas};
+}
+
+function renderListaVendedores(){
+  const wrap=document.getElementById("lista-vendedores-wrap");
+  if(!wrap)return;
+  const filtro=normalizar(document.getElementById("vbuscar")?.value||"");
+  const arr=Object.entries(vendedoresCache)
+    .filter(([k,v])=>!filtro||normalizar(v.nombre).includes(filtro))
+    .sort((a,b)=>a[1].nombre.localeCompare(b[1].nombre));
+  if(!arr.length){
+    wrap.innerHTML='<p style="color:var(--text2);font-size:13px;padding:10px 0">No hay vendedores registrados aún. Usa el formulario de arriba para agregar el primero.</p>';
+    return;
+  }
+  wrap.innerHTML=`<div class="twrap"><table class="lt"><thead><tr>
+    <th>NOMBRE</th><th style="width:90px">DOCUMENTO</th><th style="width:90px">TELÉFONO</th>
+    <th style="width:75px">PAQUETE</th><th style="width:110px">PERMISO</th>
+    <th style="width:70px">VENDIDAS</th><th style="width:90px">RECAUDADO</th><th style="width:100px"></th>
+  </tr></thead><tbody>`+
+  arr.map(([k,v])=>{
+    const stats=calcVentasVendedor(v.nombre);
+    const permLbl=v.permiso==="ASIGNADAS"?"Solo asignadas":"Cualquiera";
+    return`<tr>
+      <td><strong>${esc(v.nombre)}</strong></td>
+      <td>${v.tipoDoc||""} ${esc(v.doc||"")}</td>
+      <td>${esc(v.tel||"—")}</td>
+      <td>${v.paquete==="VICTOR"?"Víctor":"Pedro"}</td>
+      <td>${permLbl}</td>
+      <td style="text-align:center"><strong>${stats.vendidas}</strong></td>
+      <td>$${fmt(stats.recaudado)}</td>
+      <td>
+        <button class="btn btn-p btn-sm" onclick="verDetalleVendedor('${k}')">Ver</button>
+        <button class="btn btn-s btn-sm" onclick="editarVendedor('${k}')">✏️</button>
+        <button class="btn btn-sm" style="background:var(--err-bg);color:var(--err)" onclick="eliminarVendedor('${k}')">🗑️</button>
+      </td>
+    </tr>`;
+  }).join("")+"</tbody></table></div>";
+}
+
+function verDetalleVendedor(clave){
+  const v=vendedoresCache[clave];
+  if(!v)return;
+  const stats=calcVentasVendedor(v.nombre);
+  const asignadas=(v.asignadas||"").split(",").map(s=>s.trim()).filter(Boolean);
+  const asignadasInfo=asignadas.length
+    ?asignadas.map(num=>{
+        const key=NUMIDX[num.padStart(3,"0")];
+        if(!key)return`<span class="otag" style="background:var(--gray);color:var(--text2)">${num} (no existe)</span>`;
+        const bs=cache[key]||eb2();
+        const ocupado=bs.estado!=="LIBRE";
+        return`<span class="ot" style="background:${ocupado?'var(--acc)':'var(--ok)'};margin:2px">${num} ${ocupado?"🔴":"✅"}</span>`;
+      }).join(" ")
+    :'<span style="color:var(--text2);font-size:12px">Sin boletas asignadas físicamente</span>';
+  const boletasVendidasHtml=stats.boletas.length
+    ?stats.boletas.map(k=>{
+        const bm=MASTER[k],bs=cache[k];
+        return`<tr><td>${bm.n1}</td><td>${bm.n2}</td><td>${esc(bs.nombre)||"—"}</td><td>$${fmt(bs.abono)}</td></tr>`;
+      }).join("")
+    :'<tr><td colspan="4" style="text-align:center;color:var(--text2)">Aún no ha vendido boletas</td></tr>';
+
+  document.getElementById("detalle-vendedor-wrap").innerHTML=`
+  <div class="card" style="border:2px solid var(--pri)">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <div class="ct" style="margin-bottom:0">👤 ${esc(v.nombre)}</div>
+      <button class="btn btn-s btn-sm" onclick="document.getElementById('detalle-vendedor-wrap').innerHTML=''">✕ Cerrar</button>
+    </div>
+    <div class="pg4" style="margin-bottom:14px">
+      <div class="pc"><div class="pl">Vendidas</div><div class="pv">${stats.vendidas}</div></div>
+      <div class="pc"><div class="pl">Recaudado</div><div class="pv grn">$${fmt(stats.recaudado)}</div></div>
+      <div class="pc"><div class="pl">Por cobrar</div><div class="pv red">$${fmt(stats.pendiente)}</div></div>
+      <div class="pc"><div class="pl">Comisión total</div><div class="pv pur">$${fmt(stats.comision)}</div></div>
+    </div>
+    <p style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px">Boletas asignadas físicamente</p>
+    <div style="margin-bottom:14px">${asignadasInfo}</div>
+    <p style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px">Boletas vendidas por ${esc(v.nombre)}</p>
+    <div class="twrap"><table class="lt"><thead><tr><th>N°1</th><th>N°2</th><th>Comprador</th><th>Abono</th></tr></thead>
+    <tbody>${boletasVendidasHtml}</tbody></table></div>
+  </div>`;
+  document.getElementById("detalle-vendedor-wrap").scrollIntoView({behavior:"smooth",block:"start"});
+}
+
 function showTab(id,btn){
   document.querySelectorAll(".sec").forEach(s=>s.classList.remove("on"));
   document.querySelectorAll(".tab").forEach(b=>b.classList.remove("on"));
@@ -591,7 +815,7 @@ function showTab(id,btn){
   if(id==="listado")renderTabla();
   if(id==="resumen")renderResumen();
   if(id==="dashboard")renderDashboard();
-  if(id==="vendedores")renderVendedores();
+  if(id==="vendedores"){renderVendedores();renderListaVendedores();}
 }
 
 // ---- BUSQUEDA POR NOMBRE ----
@@ -759,7 +983,10 @@ function renderRes(nb,key){
             <option value="si" ${bs.tieneVendedor?"selected":""}>Sí</option>
           </select></div>
         <div class="fg"><label>NOMBRE VENDEDOR</label>
-          <input id="fvn" type="text" value="${esc(bs.vendedorNombre)}" placeholder="Nombre del vendedor" oninput="marcarEdicion()"/></div>
+          <select id="fvn" onchange="marcarEdicion()">
+            <option value="">— Selecciona un vendedor —</option>
+            ${listaVendedoresOptions(bs.vendedorNombre)}
+          </select></div>
       </div>
       ${comInfo}
     </div>
