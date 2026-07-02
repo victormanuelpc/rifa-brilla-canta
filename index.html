@@ -419,7 +419,7 @@ table.lt tr:hover td{background:#f0f4ff}
           <option value="ASIGNADAS">Solo sus boletas asignadas</option>
         </select></div>
       <div class="fg"><label>Boletas asignadas (opcional)</label>
-        <input id="vf-asignadas" type="text" placeholder="Ej: 357,358,012 (separados por coma)"/></div>
+        <input id="vf-asignadas" type="text" placeholder="Ej: 357, 410, 001 (un número por boleta, separados por coma)"/></div>
     </div>
     <div class="brow">
       <button class="btn btn-ok" onclick="guardarVendedorReg()">💾 Guardar vendedor</button>
@@ -808,14 +808,32 @@ function verDetalleVendedor(clave){
   const v=vendedoresCache[clave];
   if(!v)return;
   const stats=calcVentasVendedor(v.nombre);
-  const asignadas=(v.asignadas||"").split(",").map(s=>s.trim()).filter(Boolean);
-  const asignadasInfo=asignadas.length
-    ?asignadas.map(num=>{
-        const key=NUMIDX[num.padStart(3,"0")];
-        if(!key)return`<span class="otag" style="background:var(--gray);color:var(--text2)">${num} (no existe)</span>`;
+  // Parsear boletas asignadas — acepta: "410", "410-933", "410,933" — siempre busca el par completo
+  const asignadasRaw=(v.asignadas||"").split(",").map(s=>s.trim()).filter(Boolean);
+  const asignadasKeys=new Set();
+  asignadasRaw.forEach(entrada=>{
+    // Si contiene guión, puede ser "410-933" — tomar ambos números y buscar cada uno
+    const nums=entrada.split(/[-\/]/).map(n=>n.trim()).filter(Boolean);
+    nums.forEach(n=>{
+      const key=NUMIDX[n.padStart(3,"0")];
+      if(key) asignadasKeys.add(key);
+    });
+    // Si no encontró nada, intentar el string completo (por si acaso)
+    if(!nums.length){
+      const key=NUMIDX[entrada.padStart(3,"0")];
+      if(key) asignadasKeys.add(key);
+    }
+  });
+  const asignadasInfo=asignadasKeys.size
+    ?Array.from(asignadasKeys).map(key=>{
+        const bm=MASTER[key];
         const bs=cache[key]||eb2();
         const ocupado=bs.estado!=="LIBRE";
-        return`<span class="ot" style="background:${ocupado?'var(--acc)':'var(--ok)'};margin:2px">${num} ${ocupado?"🔴":"✅"}</span>`;
+        const color=ocupado?'var(--acc)':'var(--ok)';
+        const icon=ocupado?"🔴":"✅";
+        return`<span class="ot" style="background:${color};margin:2px;padding:5px 10px">
+          ${bm.n1}·${bm.n2} ${icon}${ocupado&&bs.nombre?' — '+esc(bs.nombre):''}
+        </span>`;
       }).join(" ")
     :'<span style="color:var(--text2);font-size:12px">Sin boletas asignadas físicamente</span>';
   const boletasVendidasHtml=stats.boletas.length
