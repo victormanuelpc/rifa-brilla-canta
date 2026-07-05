@@ -468,6 +468,11 @@ table.lt tr:hover td{background:#f0f4ff}
         <option value="VICTOR">VÍCTOR</option>
         <option value="PEDRO">PEDRO</option>
       </select>
+      <select id="fvp" onchange="filtrar()">
+        <option value="">VENDIDA POR: TODOS</option>
+        <option value="victor">VENDIDA POR: VÍCTOR</option>
+        <option value="pedro">VENDIDA POR: PEDRO</option>
+      </select>
     </div>
     <div class="twrap">
       <table class="lt">
@@ -1363,19 +1368,21 @@ function renderTabla(){
   const fn=document.getElementById("fn").value.toLowerCase();
   const fe=document.getElementById("fe").value;
   const fd=document.getElementById("fd").value;
+  const fvp=document.getElementById("fvp")?.value||"";
   const esVend=userRole==="vendedor";
   const miNombreNorm=esVend?normalizar(vendedorActivo):"";
   const rows=[];
   Object.keys(MASTER).forEach(k=>{
     const bm=MASTER[k],bs=cache[k]||eb2();
     if(esVend){
-      // Solo boletas donde el campo NOMBRE VENDEDOR coincide con el vendedor activo
       if(bs.estado==="LIBRE")return;
       if(!bs.tieneVendedor||!bs.vendedorNombre)return;
       if(normalizar(bs.vendedorNombre)!==miNombreNorm)return;
     }
     if(fe&&bs.estado!==fe)return;
     if(fd&&bm.dueno!==fd)return;
+    // Filtro VENDIDA POR — busca que el campo vendidaPor contenga el nombre seleccionado
+    if(fvp&&!normalizar(bs.vendidaPor).includes(fvp))return;
     if(fn&&!bs.nombre.toLowerCase().includes(fn))return;
     rows.push([k,bm,bs]);
   });
