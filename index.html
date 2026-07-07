@@ -470,8 +470,8 @@ table.lt tr:hover td{background:#f0f4ff}
       </select>
       <select id="fvp" onchange="filtrar()">
         <option value="">VENDIDA POR: TODOS</option>
-        <option value="victor">VENDIDA POR: VÍCTOR</option>
-        <option value="pedro">VENDIDA POR: PEDRO</option>
+        <option value="victor manuel patiño">VENDIDA POR: VÍCTOR</option>
+        <option value="pedro nel delgado">VENDIDA POR: PEDRO</option>
       </select>
     </div>
     <div class="twrap">
@@ -1382,7 +1382,7 @@ function renderTabla(){
     if(fe&&bs.estado!==fe)return;
     if(fd&&bm.dueno!==fd)return;
     // Filtro VENDIDA POR — busca que el campo vendidaPor contenga el nombre seleccionado
-    if(fvp&&!normalizar(bs.vendidaPor).includes(fvp))return;
+    if(fvp&&!normalizar(bs.vendidaPor).includes(normalizar(fvp)))return;
     if(fn&&!bs.nombre.toLowerCase().includes(fn))return;
     rows.push([k,bm,bs]);
   });
